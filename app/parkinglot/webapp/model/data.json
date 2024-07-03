@@ -1,0 +1,37 @@
+{
+	"selectedKey": "page1",
+	"navigation": [
+		{
+			"title": "Allocate Lot",
+			"key": "page1"
+		},
+		{
+			"title": "All Parking lots",
+			"key": "page2"
+		},
+		{
+			"title": "Assigned Lots",
+			"icon":"sap-icon://activity-assigned-to-goal",
+			"key": "page3"
+		},
+		{
+			"title": "Empty Lots",
+			"icon":"sap-icon://cart-2",
+			"key": "page4"
+		},
+		{
+			"title": "ReserveLot",
+			"key": "page5"
+		},
+		{
+			"title": "Monitoring",
+			"icon": "sap-icon://unwired",
+			"key":"page6"
+		},
+		{
+			"title": "History",
+			"icon":"sap-icon://customer-history",
+			"key": "page7"
+		}
+	]
+}

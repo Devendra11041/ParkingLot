@@ -1,0 +1,574 @@
+<mvc:View
+    controllerName="com.app.parkinglot.controller.Home1"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    height="100%"
+>
+    <tnt:ToolPage id="toolPage">
+        <tnt:header>
+            <tnt:ToolHeader id="_IDGenToolHeader1">
+                <Image
+                    id="_IDGenImage1"
+                    height="1.5rem"
+                    class="sapUiSmallMarginBegin"
+                    src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg"
+                />
+                <Title
+                    level="H1"
+                    text="Parking Lot Application"
+                    wrapping="false"
+                    id="productName"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData1"
+                            priority="Disappear"
+                        />
+                    </layoutData>
+                </Title>
+                <Text
+                    text="Second Тitle"
+                    wrapping="false"
+                    id="secondTitle"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData2"
+                            priority="Disappear"
+                        />
+                    </layoutData>
+                </Text>
+                <ToolbarSpacer id="_IDGenToolbarSpacer1" />
+                <!-- <SearchField
+                    width="16rem"
+                    id="searchField"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData3"
+                            priority="Low"
+                            group="1"
+                        />
+                    </layoutData>
+                </SearchField> -->
+                <ToolbarSpacer id="spacer">
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData4"
+                            priority="Low"
+                            group="1"
+                        />
+                    </layoutData>
+                </ToolbarSpacer>
+                <Button
+                    visible="false"
+                    icon="sap-icon://search"
+                    type="Transparent"
+                    id="searchButton"
+                    tooltip="Search"
+                />
+                <OverflowToolbarButton
+                    id="_IDGenOverflowToolbarButton1"
+                    icon="sap-icon://source-code"
+                    type="Transparent"
+                    tooltip="Action 1"
+                    text="Action 1"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData5"
+                            group="2"
+                        />
+                    </layoutData>
+                </OverflowToolbarButton>
+                <OverflowToolbarButton
+                    id="_IDGenOverflowToolbarButton2"
+                    icon="sap-icon://card"
+                    type="Transparent"
+                    tooltip="Action 2"
+                    text="Action 2"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData6"
+                            group="2"
+                        />
+                    </layoutData>
+                </OverflowToolbarButton>
+                <ToolbarSeparator id="_IDGenToolbarSeparator1">
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData7"
+                            group="2"
+                        />
+                    </layoutData>
+                </ToolbarSeparator>
+                <OverflowToolbarButton
+                    id="_IDGenOverflowToolbarButton3"
+                    icon="sap-icon://action-settings"
+                    type="Transparent"
+                    text="Settings"
+                />
+                <Button
+                    id="_IDGenButton1"
+                    icon="sap-icon://bell"
+                    type="Transparent"
+                    tooltip="Notification"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData8"
+                            priority="NeverOverflow"
+                        />
+                    </layoutData>
+                </Button>
+                <tnt:ToolHeaderUtilitySeparator
+                    id="_IDGenToolHeaderUtilitySeparator1"
+                />
+                <ToolbarSpacer
+                    id="_IDGenToolbarSpacer2"
+                    width="1.125rem"
+                />
+                <Avatar
+                    id="_IDGenAvatar1"
+                    src="test-resources/sap/tnt/images/Woman_avatar_01.png"
+                    displaySize="XS"
+                    press=".onAvatarPressed"
+                    tooltip="Profile"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData9"
+                            priority="NeverOverflow"
+                        />
+                    </layoutData>
+                </Avatar>
+            </tnt:ToolHeader>
+        </tnt:header>
+        <tnt:subHeader>
+            <tnt:ToolHeader id="_IDGenToolHeader2">
+                <IconTabHeader
+                    id="_IDGenIconTabHeader1"
+                    selectedKey="{/selectedKey}"
+                    items="{path: '/navigation'}"
+                    select=".onItemSelect"
+                    mode="Inline"
+                >
+                    <layoutData>
+                        <OverflowToolbarLayoutData
+                            id="_IDGenOverflowToolbarLayoutData10"
+                            priority="NeverOverflow"
+                            shrinkable="true"
+                        />
+                    </layoutData>
+                    <items>
+                        <IconTabFilter
+                            id="_IDGenIconTabFilter1"
+                            items="{items}"
+                            text="{title}"
+                            key="{key}"
+                            icon="{icon}"
+                            interactionMode="SelectLeavesOnly"
+                        >
+                            <items>
+                                <IconTabFilter
+                                    id="_IDGenIconTabFilter2"
+                                    text="{title}"
+                                    key="{key}"
+                                />
+                            </items>
+                        </IconTabFilter>
+                    </items>
+                </IconTabHeader>
+            </tnt:ToolHeader>
+        </tnt:subHeader>
+        <tnt:mainContents>
+            <NavContainer
+                id="pageContainer"
+                initialPage="page1"
+            >
+                <pages>
+                    <ScrollContainer
+                        id="page1"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <FlexBox
+                            id="idflex"
+                            justifyContent="Center"
+                            alignItems="Center"
+                            height="50%"
+                        >
+                            <VBox
+                                id="_IDGenVBox1"
+                                width="30%"
+                            >
+                                <VBox
+                                    id="_IDGenVBox2"
+                                    width="30%"
+                                    alignItems="Center"
+                                >
+                                    <Image
+                                        id="_IDGenImage2"
+                                        src="path_to_your_image"
+                                        width="80%"
+                                        height="auto"
+                                    />
+                                </VBox>
+
+                                <VBox
+                                    id="_IDGenVBox3"
+                                    width="100%"
+                                >
+                                    <VBox
+                                        id="_IDGenVBox4"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel1"
+                                            text="Driver Name"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="driverNameInput"
+                                            placeholder="Enter driver's name"
+                                            width="100%"
+                                            value="{localModel>/drivername}"
+                                        />
+                                    </VBox>
+
+                                    <VBox
+                                        id="_IDGenVBox5"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel2"
+                                            text="Driver Phone Number"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="driverPhoneInput"
+                                            placeholder="Enter driver's phone number"
+                                            width="100%"
+                                            type="Tel"
+                                            value="{localModel>/driverphno}"
+                                        />
+                                    </VBox>
+                                    <VBox
+                                        id="_IDGenVBox10"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel7"
+                                            text="Vehicel Number"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="commentsTextArea"
+                                            placeholder="Enter Vehicel Number"
+                                            value="{localModel>/vehicelNo}"
+                                        />
+                                    </VBox>
+
+                                    <VBox
+                                        id="_IDGenVBox6"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel3"
+                                            text="Vehicle Type"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="idvehiceltype"
+                                            placeholder="Enter vehicel type"
+                                            width="100%"
+                                            value="{localModel>/vehiceltype}"
+                                        />
+                                    </VBox>
+
+                                    <VBox
+                                        id="_IDGenVBox7"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel4"
+                                            text="Parking Lot Number"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="productInput"
+                                            placeholder="Select ParkingLot"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onValueHelpRequest"
+                                            suggestionItems="{/PlotNOs}"
+                                            suggestionItemSelected=".onSuggestionItemSelected"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem
+                                                    id="idlistitem1"
+                                                    key="{plot_NO}"
+                                                    text="{plot_NO}"
+                                                    additionalText="{plot_NO}"
+                                                />
+                                            </suggestionItems>
+                                        </Input>
+                                    </VBox>
+
+                                    <VBox
+                                        id="_IDGenVBox8"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            visible="false"
+                                            id="_IDGenLabel5"
+                                            text="Inward or Outward"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            visible="false"
+                                            id="idinputinout"
+                                            placeholder="Inward/outward"
+                                            width="100%"
+                                        />
+                                    </VBox>
+
+                                    <HBox
+                                        id="_IDGenHBox1"
+                                        justifyContent="End"
+                                        width="100%"
+                                        alignItems="Center"
+                                    >
+                                        <VBox id="idbuttonvboxassign">
+                                            <Button
+                                                id="idbuttonassign"
+                                                text="Assign"
+                                                press="onAssignPress"
+                                                width="100px"
+                                                type="Success"
+                                            />
+                                        </VBox>
+                                        <VBox
+                                            id="idvboxemptyspace"
+                                            width="10%"
+                                        />
+                                        <VBox id="idbuttonvboxunassign">
+                                            <Button
+                                                id="idbuttonunassign"
+                                                text="Unassign"
+                                                press="onUnassignPress"
+                                                width="100px"
+                                                type="Reject"
+                                            />
+                                        </VBox>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </FlexBox>
+                    </ScrollContainer>
+
+                    <ScrollContainer
+                        id="page2"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Table
+                            id="AllSlotsTable"
+                            class="classParkinglot"
+                            alternateRowColors="true"
+                            growing="true"
+                            width="100%"
+                            growingThreshold="6"
+                            items="{/PlotNOs}"
+                        >
+                            <columns>
+                                <Column id="idcolslotno">
+                                    <Text
+                                        id="idtextslotno"
+                                        text="Slot Number"
+                                    />
+                                </Column>
+                                <Column id="idcolparkintype">
+                                    <Text
+                                        id="idtextparkintype"
+                                        text="Parking Type"
+                                    />
+                                </Column>
+                                <Column id="idcolstatus">
+                                    <Text
+                                        id="idtextstatus"
+                                        text="Status"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="AllslotsCLI">
+                                    <cells>
+                                        <Text
+                                            id="idtextitemsno"
+                                            text="{plot_NO}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="idtextitemstype"
+                                            text="{inBoundOroutBound}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="idProcessvalue"
+                                            text="{
+                                               path: 'available',
+                                                formatter:'.statusTextFormatter'
+                                            }"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page3"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Table
+                            id="AssignedSlotsTable"
+                            class="classassigned"
+                            alternateRowColors="true"
+                            growing="true"
+                            growingThreshold="6"
+                            items=""
+                        >
+                            <columns>
+                                <Column id="idcolvehicleno">
+                                    <Text
+                                        id="_IDGenText8"
+                                        text="Vehicle Number"
+                                    />
+                                </Column>
+                                <Column id="idcoldrivername">
+                                    <Text
+                                        id="_IDGenText9"
+                                        text="Driver Name"
+                                    />
+                                </Column>
+                                <Column id="idcoldriverph">
+                                    <Text
+                                        id="_IDGenText10"
+                                        text="Driver Ph Number"
+                                    />
+                                </Column>
+                                <Column id="idcolvehicletype">
+                                    <Text
+                                        id="_IDGenText11"
+                                        text="Vehicle Type"
+                                    />
+                                </Column>
+                                <Column id="idcolparkinglot">
+                                    <Text
+                                        id="_IDGenText12"
+                                        text="Parking Lot number"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="Assignedslots">
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText13"
+                                            text=""
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText14"
+                                            text=""
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText15"
+                                            text=""
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText16"
+                                            text=""
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText17"
+                                            text=""
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page4"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="_IDGenText4"
+                            text="Identity"
+                        />
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page5"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="_IDGenText5"
+                            text="Provisioning"
+                        />
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page6"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="_IDGenText6"
+                            text="Monitoring"
+                        />
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page7"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Text
+                            id="_IDGenText7"
+                            text="Resources"
+                        />
+                    </ScrollContainer>
+                </pages>
+            </NavContainer>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>

@@ -1,0 +1,13 @@
+/* Enter your custom styles here */
+.sapUiContentPadding{
+    background-color: rgb(246, 248, 198);
+}
+
+.bold-red-label {
+    font-weight: bold;
+    color: red;
+}
+
+.classParkinglot{
+    background-color: aliceblue;
+}
