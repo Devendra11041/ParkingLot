@@ -1,13 +1,38 @@
 /* Enter your custom styles here */
 .sapUiContentPadding{
-    background-color: rgb(246, 248, 198);
+    background-color: rgb(240, 240, 233);
 }
 
 .bold-red-label {
     font-weight: bold;
-    color: red;
+    /* color: rgb(40, 225, 11); */
+    color:black; /* White text */
+    padding: 5px 5px; /* Padding around text */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
 }
 
 .classParkinglot{
     background-color: aliceblue;
+}
+
+.classpagehistory{
+    background-image:url("https://th.bing.com/th/id/OIP.3BDJSKV7rqU22Bh8PU-0cAHaFV?rs=1&pid=ImgDetMain");
+    background-size: cover;
+}
+
+.classpage1{
+    background-color: aliceblue;
+}
+
+.classtable2{
+    background-color: rgb(255, 233, 198);
+    
+}
+
+.classassigned{
+    background-color: rgb(243, 214, 238);
+}
+.classemptytable{
+    background-color: rgb(204, 245, 198);
 }

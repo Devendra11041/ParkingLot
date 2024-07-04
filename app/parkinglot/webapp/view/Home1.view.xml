@@ -196,7 +196,7 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpage1"
                     >
                         <FlexBox
                             id="idflex"
@@ -238,7 +238,7 @@
                                             id="driverNameInput"
                                             placeholder="Enter driver's name"
                                             width="100%"
-                                            value="{localModel>/drivername}"
+                                            value="{localModel>/VehicalDeatils/driverName}"
                                         />
                                     </VBox>
 
@@ -256,7 +256,7 @@
                                             placeholder="Enter driver's phone number"
                                             width="100%"
                                             type="Tel"
-                                            value="{localModel>/driverphno}"
+                                            value="{localModel>/VehicalDeatils/phone}"
                                         />
                                     </VBox>
                                     <VBox
@@ -271,7 +271,7 @@
                                         <Input
                                             id="commentsTextArea"
                                             placeholder="Enter Vehicel Number"
-                                            value="{localModel>/vehicelNo}"
+                                            value="{localModel>/VehicalDeatils/vehicalNo}"
                                         />
                                     </VBox>
 
@@ -288,7 +288,7 @@
                                             id="idvehiceltype"
                                             placeholder="Enter vehicel type"
                                             width="100%"
-                                            value="{localModel>/vehiceltype}"
+                                            value="{localModel>/VehicalDeatils/vehicalType}"
                                         />
                                     </VBox>
 
@@ -306,9 +306,24 @@
                                             placeholder="Select ParkingLot"
                                             showSuggestion="true"
                                             showValueHelp="true"
+                                            visible="{ path: 'available'}"
                                             valueHelpRequest=".onValueHelpRequest"
-                                            suggestionItems="{/PlotNOs}"
+                                            suggestionItems="{
+                                                 path: '/PlotNOs',
+                                                 sorter: {
+                                                            path: 'plot_NO',
+                                                            descending: false
+                                                          },
+                                                    filters: [
+                                                          {
+                                                            path: 'available',
+                                                            operator: 'EQ',
+                                                            value1: true
+                                                          }
+                                                              ]
+                                                        }"
                                             suggestionItemSelected=".onSuggestionItemSelected"
+                                            value="{localModel>/plotNo_plot_NO}"
                                         >
                                             <suggestionItems>
                                                 <core:ListItem
@@ -367,6 +382,19 @@
                                                 type="Reject"
                                             />
                                         </VBox>
+                                        <VBox
+                                            id="idvboxemptyspace2"
+                                            width="10%"
+                                        />
+                                        <VBox id="idbuttonvboxclear">
+                                            <Button
+                                                id="idbuttonunclear"
+                                                text="clear"
+                                                press="onclearPress"
+                                                width="100px"
+                                                type="Default"
+                                            />
+                                        </VBox>
                                     </HBox>
                                 </VBox>
                             </VBox>
@@ -382,11 +410,11 @@
                     >
                         <Table
                             id="AllSlotsTable"
-                            class="classParkinglot"
+                            class="tableclass"
                             alternateRowColors="true"
                             growing="true"
                             width="100%"
-                            growingThreshold="6"
+                            growingThreshold="5"
                             items="{/PlotNOs}"
                         >
                             <columns>
@@ -410,7 +438,10 @@
                                 </Column>
                             </columns>
                             <items>
-                                <ColumnListItem id="AllslotsCLI">
+                                <ColumnListItem
+                                    id="AllslotsCLI"
+                                    class="classtable2"
+                                >
                                     <cells>
                                         <Text
                                             id="idtextitemsno"
@@ -449,8 +480,30 @@
                             alternateRowColors="true"
                             growing="true"
                             growingThreshold="6"
-                            items=""
+                            items="{/VehicalDeatils}"
                         >
+                            <headerToolbar>
+                                <OverflowToolbar id="idSlotsTableHeader">
+                                    <Title
+                                        id="idTableHeaderTitle"
+                                        text="Assigned Slots"
+                                    />
+                                    <ToolbarSpacer id="idTableHeaderSpacer" />
+                                    <Button
+                                        id="idBtnUnassign"
+                                        type="Default"
+                                        press="onUnassignlotPress"
+                                        text="Unassign"
+                                    />
+                                    <Button
+                                        id="idBtnEdit"
+                                        icon="sap-icon://edit"
+                                        type="Emphasized"
+                                        press="onEditlotPress"
+                                        text="Reassign"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
                             <columns>
                                 <Column id="idcolvehicleno">
                                     <Text
@@ -482,37 +535,52 @@
                                         text="Parking Lot number"
                                     />
                                 </Column>
+                                <Column id="idcomlparkinglot">
+                                    <Text
+                                        id="_IDGenTextdate"
+                                        text="Entry Date"
+                                    />
+                                </Column>
                             </columns>
                             <items>
-                                <ColumnListItem id="Assignedslots">
+                                <ColumnListItem
+                                    id="Assignedslots"
+                                    class="classassigned"
+                                >
                                     <cells>
                                         <Text
                                             id="_IDGenText13"
-                                            text=""
+                                            text="{vehicalNo}"
                                         />
                                     </cells>
                                     <cells>
                                         <Text
                                             id="_IDGenText14"
-                                            text=""
+                                            text="{driverName}"
                                         />
                                     </cells>
                                     <cells>
                                         <Text
                                             id="_IDGenText15"
-                                            text=""
+                                            text="{phone}"
                                         />
                                     </cells>
                                     <cells>
                                         <Text
                                             id="_IDGenText16"
-                                            text=""
+                                            text="{vehicalType}"
                                         />
                                     </cells>
                                     <cells>
                                         <Text
                                             id="_IDGenText17"
-                                            text=""
+                                            text="{plotNo_plot_NO}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText18"
+                                            text="{assignedDate}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -526,10 +594,62 @@
                         height="100%"
                         class="sapUiContentPadding"
                     >
-                        <Text
-                            id="_IDGenText4"
-                            text="Identity"
-                        />
+                        <Table
+                            id="EmptySlotsTable"
+                            class="classParkinglot"
+                            alternateRowColors="true"
+                            growing="true"
+                            width="100%"
+                            growingThreshold="6"
+                            items="{/PlotNOs}"
+                        >
+                            <columns>
+                                <Column id="idcolemptyslotno">
+                                    <Text
+                                        id="idtextsemptylotno"
+                                        text="Slot Number"
+                                    />
+                                </Column>
+                                <Column id="idcolemptyparkintype">
+                                    <Text
+                                        id="idtextemptyparkintype"
+                                        text="Parking Type"
+                                    />
+                                </Column>
+                                <Column id="idcolemptystatus">
+                                    <Text
+                                        id="idtextemptystatus"
+                                        text="Status"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem
+                                    id="emptyslotsCLI"
+                                    class="classemptytable"
+                                    visible="{ path: 'available'}"
+                                >
+                                    <cells>
+                                        <Text
+                                            id="idtextemptyitemsno"
+                                            text="{plot_NO}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="idtexemptyemstype"
+                                            text="{inBoundOroutBound}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="idProcessemptyvalue"
+                                            text="{ path: 'available', formatter: '.statusTextFormatter' }"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </ScrollContainer>
                     <ScrollContainer
                         id="page5"
@@ -560,7 +680,7 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpagehistory"
                     >
                         <Text
                             id="_IDGenText7"

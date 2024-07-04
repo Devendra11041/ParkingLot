@@ -2,7 +2,7 @@ namespace my.Parking;
 
 using {cuid} from '@sap/cds/common';
 
-type VehicalNumber : String @assert.format: '^[A-Z]{2}-[0-9]{2}-[A-Z]{1,2}-[0-9]{1,4}$';
+//type VehicalNumber : String @assert.format: '^[A-Z]{2}-[0-9]{2}-[A-Z]{1,2}-[0-9]{1,4}$';
 
 entity PlotNOs {
   key plot_NO           : String;
@@ -16,7 +16,7 @@ entity VehicalDeatils {
       driverName     : String;
       phone          : Integer64;
       vehicalType    : String;
-      assignedDate   : String;
+      assignedDate   : DateTime;
       unassignedDate : String;
       plotNo         : Association to PlotNOs
 

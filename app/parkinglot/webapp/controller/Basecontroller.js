@@ -12,30 +12,32 @@ sap.ui.define(
 
             },
             //Performing curd operations
-            createData: function(oModel, oPayload, sPath){
+            createData: function (oModel, oPayload, sPath) {
                 debugger
                 return new Promise((resolve, reject) => {
                     oModel.create(sPath, oPayload, {
                         refreshAfterChange: true,
-                        success: function(oSuccessData){
+                        success: function (oSuccessData) {
                             resolve(oSuccessData);
                             debugger
                         },
-                        error: function(oErrorData){
+                        error: function (oErrorData) {
                             reject(oErrorData)
                         }
                     })
                 })
             },
-            //Function for loading the fragment
-            loadFragment: async function (sFragmentName) {
-                const oFragment = await Fragment.load({
-                    id: this.getView().getId(),
-                    name: `com.app.parkinglot.fragment.${sFragmentName}`,
-                    controller: this
-                });
-                this.getView().addDependent(oFragment);
-                return oFragment
+            deleteData: function (oModel, sPath, ID) {
+                return new Promise((resolve, reject) => {
+                    oModel.remove(`${sPath}/${ID}`, {
+                        success: function (oSuccessData) {
+                            resolve(oSuccessData);
+                        },
+                        error: function (oErrorData) {
+                            reject(oErrorData)
+                        }
+                    })
+                })
             }
         });
     }
