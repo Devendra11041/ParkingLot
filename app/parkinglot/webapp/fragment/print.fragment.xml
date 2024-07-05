@@ -1,0 +1,106 @@
+<!-- ParkingFormFragment.fragment.xml -->
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="idprintparking"
+        title="Parking Lot Allocation Form with XYZ Warehouse"
+        stretch="true"
+        beginButton="{= ${localModel>/VehicalDeatils/vehicalNo} ? 'saveButton' : 'createButton' }"
+        endButton="cancelButton"
+    >
+        <content>
+            <VBox id="idprintvbox">
+                <Label
+                    id="idprintlabel"
+                    text="Vehicle Number"
+                    class="bold-red-label"
+                />
+                <Input
+                    id="idinputprint"
+                    placeholder="Enter Vehicle Number"
+                    value="{localModel>/VehicalDeatils/vehicalNo}"
+                    width="100%"
+                />
+
+                <Label
+                    id="idprintlabel1"
+                    text="Driver Name"
+                    class="bold-red-label"
+                />
+                <Input
+                    id="idinputprint1"
+                    placeholder="Enter Driver's Name"
+                    value="{localModel>/VehicalDeatils/driverName}"
+                    width="100%"
+                />
+
+                <Label
+                    id="idprintlabel2"
+                    text="Driver Phone Number"
+                    class="bold-red-label"
+                />
+                <Input
+                    id="idinputprint2"
+                    placeholder="Enter Driver's Phone Number"
+                    type="Tel"
+                    value="{localModel>/VehicalDeatils/phone}"
+                    width="100%"
+                />
+
+                <Label
+                    id="idprintlabel3"
+                    text="Vehicle Type"
+                    class="bold-red-label"
+                />
+                <Input
+                    id="idinputprint3"
+                    placeholder="Enter Vehicle Type"
+                    value="{localModel>/VehicalDeatils/vehicalType}"
+                    width="100%"
+                />
+
+                <Label
+                    id="idprintlabel4"
+                    text="Parking Lot Number"
+                    class="bold-red-label"
+                />
+                <Input
+                    id="idinputprint5"
+                    placeholder="Select Parking Lot"
+                    value="{localModel>/VehicalDeatils/plotNo_plot_NO}"
+                    width="100%"
+                />
+
+                <Label
+                    id="idprintlabel5"
+                    text="Entry Date"
+                    class="bold-red-label"
+                />
+                <DatePicker
+                    id="iddatepicker"
+                    value="{localModel>/VehicalDeatils/assignedDate}"
+                    width="100%"
+                />
+            </VBox>
+        </content>
+        <buttons>
+            <Button
+                id="saveButton"
+                text="Save"
+                press="onSavePress"
+            />
+            <Button
+                id="createButton"
+                text="Create"
+                press="onCreatePress"
+            />
+            <Button
+                id="cancelButton"
+                text="Cancel"
+                press="onCloseDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

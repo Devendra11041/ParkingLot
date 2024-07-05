@@ -5,9 +5,10 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/ui/core/Fragment",
 	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator"
+	"sap/ui/model/FilterOperator",
+	"sap/m/MessageBox"
 
-], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, FilterOperator) {
+], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, FilterOperator, MessageBox) {
 	"use strict";
 
 	return Controller.extend("com.app.parkinglot.controller.Home1", {
@@ -22,7 +23,8 @@ sap.ui.define([
 					driverName: "",
 					phone: 0,
 					vehicalType: "",
-					assignedDate:new Date(),
+					assignedDate: "",
+					unassignedDate: "",
 					plotNo_plot_NO: "",
 				},
 				plotNo: {
@@ -47,7 +49,7 @@ sap.ui.define([
 		statusTextFormatter: function (bStatus) {
 			return bStatus ? "Empty" : "Not Empty"; // Modify as per your requirement
 		},
-		
+
 		//
 		onValueHelpRequest: function (oEvent) {
 			var sInputValue = oEvent.getSource().getValue(),
@@ -99,7 +101,8 @@ sap.ui.define([
 			const { driverName, phone, vehicalNo, vehicalType } = this.getView().byId("page1").getModel("localModel").getProperty("/").VehicalDeatils;
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
 			const plotNo = this.getView().byId("productInput").getValue();
-			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo
+			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
+			
 			if (!(driverName && phone && vehicalNo && vehicalType && plotNo)) {
 				MessageToast.show("Enter all details")
 				return
@@ -121,11 +124,11 @@ sap.ui.define([
 			const plotAvailability = await this.checkPlotAvailability(oModel, plotNo);
 			if (!plotAvailability) {
 				sap.m.MessageBox.information(`${plotNo} is not available now.Choose another Parking Lot.`,
-				{
-					title: "Allocation Information",
-					actions: sap.m.MessageBox.Action.OK
-				}
-			);
+					{
+						title: "Allocation Information",
+						actions: sap.m.MessageBox.Action.OK
+					}
+				);
 				return;
 			}
 
@@ -149,7 +152,7 @@ sap.ui.define([
 						sap.m.MessageBox.error("Failed to update: " + oError.message);
 					}.bind(this)
 				});
-				this.onclearPress;
+
 			} catch (error) {
 				console.error("Error:", error);
 			}
@@ -215,7 +218,34 @@ sap.ui.define([
 			});
 
 			// Clear any other necessary fields or models
-			this.getView().byId("productInput").setValue(""); 
+			this.getView().byId("productInput").setValue("");
+		},
+		onUnassignPress1: async function () {
+			const oPayload = this.getView().byId("page1").getModel("localModel").getProperty("/");
+			const { driverName, phone, vehicalNo, vehicalType } = this.getView().byId("page1").getModel("localModel").getProperty("/").VehicalDeatils;
+			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
+			const plotNo = this.getView().byId("productInput").getValue();
+			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
+			const newtime = new Date;
+			oPayload.VehicalDeatils.unassignedDate = newtime;
+			try {
+				await this.createData(oModel, oPayload.VehicalDeatils, "/History");
+				sap.m.MessageBox.success("vehicel unassigend ")
+				await this.deleteData(oModel,  vehicalNo, "/VehicalDeatils");
+				oModel.update("/PlotNOs('" + plotNo + "')", oPayload.plotNo, {
+					success: function () {
+
+					},
+					error: function (oError) {
+
+						sap.m.MessageBox.error("Failed to update : " + oError.message);
+					}
+				});
+			} catch (error) {
+
+				sap.m.MessageBox.error("Some technical Issue");
+			}
+		
 		}
 	});
 });

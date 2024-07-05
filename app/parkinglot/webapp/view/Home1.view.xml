@@ -5,6 +5,7 @@
     xmlns:tnt="sap.tnt"
     xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout"
+    xmlns:smartTable="sap.ui.comp.smarttable"
     height="100%"
 >
     <tnt:ToolPage id="toolPage">
@@ -29,31 +30,7 @@
                         />
                     </layoutData>
                 </Title>
-                <Text
-                    text="Second Тitle"
-                    wrapping="false"
-                    id="secondTitle"
-                >
-                    <layoutData>
-                        <OverflowToolbarLayoutData
-                            id="_IDGenOverflowToolbarLayoutData2"
-                            priority="Disappear"
-                        />
-                    </layoutData>
-                </Text>
                 <ToolbarSpacer id="_IDGenToolbarSpacer1" />
-                <!-- <SearchField
-                    width="16rem"
-                    id="searchField"
-                >
-                    <layoutData>
-                        <OverflowToolbarLayoutData
-                            id="_IDGenOverflowToolbarLayoutData3"
-                            priority="Low"
-                            group="1"
-                        />
-                    </layoutData>
-                </SearchField> -->
                 <ToolbarSpacer id="spacer">
                     <layoutData>
                         <OverflowToolbarLayoutData
@@ -72,28 +49,15 @@
                 />
                 <OverflowToolbarButton
                     id="_IDGenOverflowToolbarButton1"
-                    icon="sap-icon://source-code"
-                    type="Transparent"
-                    tooltip="Action 1"
-                    text="Action 1"
+                    icon="sap-icon://print"
+                    type="Success"
+                    tooltip="Print"
+                    text="Print"
+                    press="Printpress"
                 >
                     <layoutData>
                         <OverflowToolbarLayoutData
                             id="_IDGenOverflowToolbarLayoutData5"
-                            group="2"
-                        />
-                    </layoutData>
-                </OverflowToolbarButton>
-                <OverflowToolbarButton
-                    id="_IDGenOverflowToolbarButton2"
-                    icon="sap-icon://card"
-                    type="Transparent"
-                    tooltip="Action 2"
-                    text="Action 2"
-                >
-                    <layoutData>
-                        <OverflowToolbarLayoutData
-                            id="_IDGenOverflowToolbarLayoutData6"
                             group="2"
                         />
                     </layoutData>
@@ -226,6 +190,22 @@
                                     width="100%"
                                 >
                                     <VBox
+                                        id="_IDGenVBox10"
+                                        width="100%"
+                                    >
+                                        <Label
+                                            id="_IDGenLabel7"
+                                            text="Vehicel Number"
+                                            class="bold-red-label"
+                                        />
+                                        <Input
+                                            id="commentsTextArea"
+                                            placeholder="Enter Vehicel Number"
+                                            value="{localModel>/VehicalDeatils/vehicalNo}"
+                                        />
+                                    </VBox>
+
+                                    <VBox
                                         id="_IDGenVBox4"
                                         width="100%"
                                     >
@@ -257,21 +237,6 @@
                                             width="100%"
                                             type="Tel"
                                             value="{localModel>/VehicalDeatils/phone}"
-                                        />
-                                    </VBox>
-                                    <VBox
-                                        id="_IDGenVBox10"
-                                        width="100%"
-                                    >
-                                        <Label
-                                            id="_IDGenLabel7"
-                                            text="Vehicel Number"
-                                            class="bold-red-label"
-                                        />
-                                        <Input
-                                            id="commentsTextArea"
-                                            placeholder="Enter Vehicel Number"
-                                            value="{localModel>/VehicalDeatils/vehicalNo}"
                                         />
                                     </VBox>
 
@@ -377,7 +342,7 @@
                                             <Button
                                                 id="idbuttonunassign"
                                                 text="Unassign"
-                                                press="onUnassignPress"
+                                                press="onUnassignPress1"
                                                 width="100px"
                                                 type="Reject"
                                             />
@@ -417,6 +382,17 @@
                             growingThreshold="5"
                             items="{/PlotNOs}"
                         >
+                            <headerToolbar>
+                                <OverflowToolbar id="idSlotsTableHeadertable2">
+                                    <Title
+                                        id="idTableHeaderTitletable2"
+                                        text="All Parking Slots"
+                                    />
+                                    <ToolbarSpacer
+                                        id="idTableHeaderSpacertable2"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
                             <columns>
                                 <Column id="idcolslotno">
                                     <Text
@@ -478,6 +454,7 @@
                             id="AssignedSlotsTable"
                             class="classassigned"
                             alternateRowColors="true"
+                            mode="MultiSelect"
                             growing="true"
                             growingThreshold="6"
                             items="{/VehicalDeatils}"
@@ -491,16 +468,24 @@
                                     <ToolbarSpacer id="idTableHeaderSpacer" />
                                     <Button
                                         id="idBtnUnassign"
-                                        type="Default"
+                                        type="Reject"
                                         press="onUnassignlotPress"
                                         text="Unassign"
                                     />
-                                    <Button
+                                    <!-- <Button
                                         id="idBtnEdit"
                                         icon="sap-icon://edit"
                                         type="Emphasized"
                                         press="onEditlotPress"
                                         text="Reassign"
+                                    /> -->
+                                    <Button
+                                        id="idprintbutton"
+                                        icon="sap-icon://print"
+                                        type="Success"
+                                        tooltip="Print"
+                                        text="Print"
+                                        press="Printpress"
                                     />
                                 </OverflowToolbar>
                             </headerToolbar>
@@ -583,6 +568,13 @@
                                             text="{assignedDate}"
                                         />
                                     </cells>
+                                    <cells>
+                                        <Button
+                                            id="idreviewbut"
+                                            text="Unassign"
+                                            press="onUnassignPress"
+                                        />
+                                    </cells>
                                 </ColumnListItem>
                             </items>
                         </Table>
@@ -603,6 +595,19 @@
                             growingThreshold="6"
                             items="{/PlotNOs}"
                         >
+                            <headerToolbar>
+                                <OverflowToolbar
+                                    id="idSlotsTableHeaderemptable"
+                                >
+                                    <Title
+                                        id="idTableHeaderTitleemptable"
+                                        text="Empty Slots"
+                                    />
+                                    <ToolbarSpacer
+                                        id="idTableHeaderSpaceremptable"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
                             <columns>
                                 <Column id="idcolemptyslotno">
                                     <Text
@@ -682,10 +687,120 @@
                         height="100%"
                         class="classpagehistory"
                     >
-                        <Text
-                            id="_IDGenText7"
-                            text="Resources"
-                        />
+                        <Table
+                            id="AssignedhistoryTable"
+                            class="classassigned"
+                            alternateRowColors="true"
+                            growing="true"
+                            growingThreshold="6"
+                            items="{/History}"
+                        >
+                            <headerToolbar>
+                                <OverflowToolbar id="idhistoryTableHeader">
+                                    <Title
+                                        id="idTablehistoryHeaderTitle"
+                                        text="Parking Slot History"
+                                    />
+                                    <ToolbarSpacer
+                                        id="idTableHistoryHeaderSpacer"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column id="idcolvehiclenoHistory">
+                                    <Text
+                                        id="idtexthistoryvhno"
+                                        text="Vehicle Number"
+                                    />
+                                </Column>
+                                <Column id="idcoldrivernameHistory">
+                                    <Text
+                                        id="idtexthistoryname"
+                                        text="Driver Name"
+                                    />
+                                </Column>
+                                <Column id="idcoldriverphHistory">
+                                    <Text
+                                        id="idtexthistoryphno"
+                                        text="Driver Ph Number"
+                                    />
+                                </Column>
+                                <Column id="idcolvehicletypeHistory">
+                                    <Text
+                                        id="idtexthistoryvtype"
+                                        text="Vehicle Type"
+                                    />
+                                </Column>
+                                <Column id="idcolparkinglotHistory">
+                                    <Text
+                                        id="idtexthistoryplot"
+                                        text="Parking Lot Number"
+                                    />
+                                </Column>
+                                <Column id="idcolintime">
+                                    <Text
+                                        id="idtexthistoryintime"
+                                        text="In Time"
+                                    />
+                                </Column>
+                                <Column id="idcolouttime">
+                                    <Text
+                                        id="idtexthistoryoutime"
+                                        text="Out Time"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem
+                                    id="Historyslots"
+                                    class="classassigned"
+                                >
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryvno"
+                                            text="{vehicalNo}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistorydbname"
+                                            text="{driverName}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryph"
+                                            text="{phone}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryvtype"
+                                            text="{vehicalType}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryptno"
+                                            text="{plotNo_plot_NO}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryintime"
+                                            text="{assignedDate}"
+                                        />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            id="cellhistoryoutime"
+                                            text="{unassignedDate}"
+                                        />
+                                    </cells>
+                                    <!-- Add more cells for additional fields -->
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </ScrollContainer>
                 </pages>
             </NavContainer>

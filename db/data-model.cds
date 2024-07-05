@@ -33,7 +33,7 @@ entity History : cuid {
   driverName     : String;
   phone          : Integer64;
   vehicalType    : String;
-  assignedDate   : String;
-  unassignedDate : String;
+  assignedDate   : DateTime;
+  unassignedDate : DateTime;
   plotNo         : Association to PlotNOs
 }
