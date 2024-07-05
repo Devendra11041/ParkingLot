@@ -102,7 +102,12 @@ sap.ui.define([
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
 			const plotNo = this.getView().byId("productInput").getValue();
 			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
-			
+
+			//Assingning the current time to the vehicel data.
+			const Intime = new Date;
+			oPayload.VehicalDeatils.assignedDate = Intime;
+
+
 			if (!(driverName && phone && vehicalNo && vehicalType && plotNo)) {
 				MessageToast.show("Enter all details")
 				return
@@ -230,9 +235,27 @@ sap.ui.define([
 			oPayload.VehicalDeatils.unassignedDate = newtime;
 			try {
 				await this.createData(oModel, oPayload.VehicalDeatils, "/History");
-				sap.m.MessageBox.success("vehicel unassigend ")
-				await this.deleteData(oModel,  vehicalNo, "/VehicalDeatils");
-				oModel.update("/PlotNOs('" + plotNo + "')", oPayload.plotNo, {
+				sap.m.MessageBox.information(
+					`Vehicel No ${vehicalNo} Unassigned to Slot No ${plotNo} present empty`,
+					{
+						title: "Allocation Information",
+						actions: sap.m.MessageBox.Action.OK
+					}
+				);
+
+				await this.deleteData(oModel, "/VehicalDeatils", vehicalNo);
+				sap.m.MessageBox.information(
+					`Vehicel No ${vehicalNo} Unassigned to Slot No ${plotNo} present empty`,
+					{
+						title: "Allocation Information",
+						actions: sap.m.MessageBox.Action.OK
+					}
+				);
+				const updatedParkingLot = {
+					available: true // Assuming false represents empty parking
+					// Add other properties if needed
+				};
+				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
 
 					},
@@ -245,7 +268,7 @@ sap.ui.define([
 
 				sap.m.MessageBox.error("Some technical Issue");
 			}
-		
+
 		}
 	});
 });

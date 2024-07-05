@@ -53,6 +53,7 @@
                     type="Success"
                     tooltip="Print"
                     text="Print"
+                    visible="false"
                     press="Printpress"
                 >
                     <layoutData>
@@ -466,19 +467,6 @@
                                         text="Assigned Slots"
                                     />
                                     <ToolbarSpacer id="idTableHeaderSpacer" />
-                                    <Button
-                                        id="idBtnUnassign"
-                                        type="Reject"
-                                        press="onUnassignlotPress"
-                                        text="Unassign"
-                                    />
-                                    <!-- <Button
-                                        id="idBtnEdit"
-                                        icon="sap-icon://edit"
-                                        type="Emphasized"
-                                        press="onEditlotPress"
-                                        text="Reassign"
-                                    /> -->
                                     <Button
                                         id="idprintbutton"
                                         icon="sap-icon://print"
