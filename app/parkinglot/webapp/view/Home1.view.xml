@@ -54,7 +54,6 @@
                     tooltip="Print"
                     text="Print"
                     visible="false"
-                    press="Printpress"
                 >
                     <layoutData>
                         <OverflowToolbarLayoutData
@@ -473,7 +472,7 @@
                                         type="Success"
                                         tooltip="Print"
                                         text="Print"
-                                        press="Printpress"
+                                        press="OnPrintpress"
                                     />
                                 </OverflowToolbar>
                             </headerToolbar>

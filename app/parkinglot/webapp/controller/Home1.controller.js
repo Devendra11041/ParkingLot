@@ -269,6 +269,39 @@ sap.ui.define([
 				sap.m.MessageBox.error("Some technical Issue");
 			}
 
+		},
+		OnPrintpress: async function () {
+			var oSelected = this.byId("AssignedSlotsTable").getSelectedItems();
+			if (oSelected.length === 0) {
+				MessageBox.error("Please Select atleast one Book to Edit");
+				return
+			};
+
+			var oSelect = oSelected[0]
+			if (oSelect) {
+				var ovehicalNo = oSelect.getBindingContext().getProperty("vehicalNo");
+				var odriverName = oSelect.getBindingContext().getProperty("driverName");
+				var ophone = oSelect.getBindingContext().getProperty("phone");
+				var ovehicalType = oSelect.getBindingContext().getProperty("vehicalType");
+				var oassignedDate = oSelect.getBindingContext().getProperty("assignedDate");
+				var oplotNo = oSelect.getBindingContext().getProperty("plotNo");
+			};
+			if (!this.oprint) {
+				this.oprint = await Fragment.load({
+					id: this.getView().getId(),
+					name: "com.app.parkinglot.fragment.print",
+					controller: this
+				});
+				this.getView().addDependent(this.oprint);
+			}
+
+			this.oprint.open();
+		},
+		onCloseDialog: function(){
+		var oDialog = this.byId("idprintparking");
+            if (oDialog) {
+                oDialog.close();
+            }
 		}
 	});
 });

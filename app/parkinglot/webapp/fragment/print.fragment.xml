@@ -2,88 +2,92 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
 >
     <Dialog
         id="idprintparking"
-        title="Parking Lot Allocation Form with XYZ Warehouse"
-        stretch="true"
-        beginButton="{= ${localModel>/VehicalDeatils/vehicalNo} ? 'saveButton' : 'createButton' }"
-        endButton="cancelButton"
+        title="Parking Lot Allocation Form"
+        resizable="true"
+        draggable="true"
+        contentWidth="60%"
+        contentHeight="50%"
     >
         <content>
-            <VBox id="idprintvbox">
-                <Label
-                    id="idprintlabel"
-                    text="Vehicle Number"
-                    class="bold-red-label"
-                />
-                <Input
-                    id="idinputprint"
-                    placeholder="Enter Vehicle Number"
-                    value="{localModel>/VehicalDeatils/vehicalNo}"
-                    width="100%"
-                />
+            <f:SimpleForm
+                id="idSimpleForm"
+                layout="ResponsiveGridLayout"
+                editable="true"
+                title="Parking Lot Allocation Form with XYZ Warehouse"
+            >
+                <f:content>
+                    <Label
+                        text="Vehicle Number"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint1"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/vehicalNo}"
+                        id="textprint1"
+                    />
 
-                <Label
-                    id="idprintlabel1"
-                    text="Driver Name"
-                    class="bold-red-label"
-                />
-                <Input
-                    id="idinputprint1"
-                    placeholder="Enter Driver's Name"
-                    value="{localModel>/VehicalDeatils/driverName}"
-                    width="100%"
-                />
+                    <Label
+                        text="Driver Name"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint2"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/driverName}"
+                        id="textprint2"
+                    />
 
-                <Label
-                    id="idprintlabel2"
-                    text="Driver Phone Number"
-                    class="bold-red-label"
-                />
-                <Input
-                    id="idinputprint2"
-                    placeholder="Enter Driver's Phone Number"
-                    type="Tel"
-                    value="{localModel>/VehicalDeatils/phone}"
-                    width="100%"
-                />
+                    <Label
+                        text="Driver Phone Number"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint3"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/phone}"
+                        id="textprint3"
+                    />
 
-                <Label
-                    id="idprintlabel3"
-                    text="Vehicle Type"
-                    class="bold-red-label"
-                />
-                <Input
-                    id="idinputprint3"
-                    placeholder="Enter Vehicle Type"
-                    value="{localModel>/VehicalDeatils/vehicalType}"
-                    width="100%"
-                />
+                    <Label
+                        text="Vehicle Type"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint4"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/vehicalType}"
+                        id="textprint4"
+                    />
 
-                <Label
-                    id="idprintlabel4"
-                    text="Parking Lot Number"
-                    class="bold-red-label"
-                />
-                <Input
-                    id="idinputprint5"
-                    placeholder="Select Parking Lot"
-                    value="{localModel>/VehicalDeatils/plotNo_plot_NO}"
-                    width="100%"
-                />
+                    <Label
+                        text="Parking Lot Number"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint5"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/plotNo_plot_NO}"
+                        id="textprint5"
+                    />
 
-                <Label
-                    id="idprintlabel5"
-                    text="Entry Date"
-                    class="bold-red-label"
-                />
-                <DatePicker
-                    id="iddatepicker"
-                    value="{localModel>/VehicalDeatils/assignedDate}"
-                    width="100%"
-                />
-            </VBox>
+                    <Label
+                        text="Entry Date"
+                        class="bold-red-label"
+                        width="120px"
+                        id="labelprint6"
+                    />
+                    <Text
+                        text="{localModel>/VehicalDeatils/assignedDate}"
+                        id="textprint6"
+                    />
+                </f:content>
+            </f:SimpleForm>
         </content>
         <buttons>
             <Button
@@ -93,8 +97,8 @@
             />
             <Button
                 id="createButton"
-                text="Create"
-                press="onCreatePress"
+                text="Print"
+                press="onprint"
             />
             <Button
                 id="cancelButton"
