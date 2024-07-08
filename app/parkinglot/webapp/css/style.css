@@ -36,3 +36,23 @@
 .classemptytable{
     background-color: rgb(204, 245, 198);
 }
+
+.classssubheader{
+    background-color: rgb(240, 245, 159);
+}
+
+.classformreserve{
+    background-color: antiquewhite;
+}
+
+.sapUiContentPaddingreserve{
+    background-color: rgb(243, 197, 237);
+}
+
+.classButton{
+    margin-left: 330px;
+}
+
+.classHbox{
+    margin-top: 20px;
+}

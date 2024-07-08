@@ -231,32 +231,22 @@ sap.ui.define([
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
 			const plotNo = this.getView().byId("productInput").getValue();
 			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
+
 			const newtime = new Date;
 			oPayload.VehicalDeatils.unassignedDate = newtime;
+
 			try {
 				await this.createData(oModel, oPayload.VehicalDeatils, "/History");
-				sap.m.MessageBox.information(
-					`Vehicel No ${vehicalNo} Unassigned to Slot No ${plotNo} present empty`,
-					{
-						title: "Allocation Information",
-						actions: sap.m.MessageBox.Action.OK
-					}
-				);
 
 				await this.deleteData(oModel, "/VehicalDeatils", vehicalNo);
-				sap.m.MessageBox.information(
-					`Vehicel No ${vehicalNo} Unassigned to Slot No ${plotNo} present empty`,
-					{
-						title: "Allocation Information",
-						actions: sap.m.MessageBox.Action.OK
-					}
-				);
+
 				const updatedParkingLot = {
 					available: true // Assuming false represents empty parking
 					// Add other properties if needed
 				};
 				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
+						sap.m.MessageBox.success("parking lot unassigend")
 
 					},
 					error: function (oError) {
@@ -297,11 +287,104 @@ sap.ui.define([
 
 			this.oprint.open();
 		},
-		onCloseDialog: function(){
-		var oDialog = this.byId("idprintparking");
-            if (oDialog) {
-                oDialog.close();
+		onCloseDialog: function () {
+			var oDialog = this.byId("idprintparking");
+			if (oDialog) {
+				oDialog.close();
+			}
+		},
+		//vehicel submission details are alredy in 
+		vehiclesubmit: function (oEvent) {
+			debugger
+			const oLocalModel = this.getView().byId("page1").getModel("localModel");
+			const oModel = this.getView().byId("pageContainer").getModel("ModelV2");
+			const svehicalNo = oEvent.getParameter("value");
+
+			oModel.read("/VehicalDeatils", {
+				filters: [
+					new Filter("vehicalNo", FilterOperator.EQ, svehicalNo)
+				],
+				success: function (oData) {
+					var aVehicles = oData.results;
+					if (aVehicles.length > 0) {
+						// Assuming there's only one record with unique vehicalNo
+						var oVehicle = aVehicles[0];
+						// Set other fields based on the found vehicle
+						oLocalModel.setProperty("/VehicalDeatils/vehicalNo", oVehicle.vehicalNo);
+						oLocalModel.setProperty("/VehicalDeatils/driverName", oVehicle.driverName);
+						oLocalModel.setProperty("/VehicalDeatils/phone", oVehicle.phone);
+						oLocalModel.setProperty("/VehicalDeatils/vehicalType", oVehicle.vehicalType);
+						oLocalModel.setProperty("/VehicalDeatils/assignedDate", oVehicle.assignedDate);
+						oView.byId("productInput").setValue(oVehicle.plotNo_plot_NO)
+						// Set other fields as needed
+					} else {
+						// Handle case where vehicle number was not found
+						sap.m.MessageToast.show("Vehicle number not found.");
+						// Optionally clear other fields
+						oLocalModel.setProperty("/VehicalDeatils/vehicalNo", "");
+						oLocalModel.setProperty("/VehicalDeatils/driverName", "");
+						oLocalModel.setProperty("/VehicalDeatils/phone", "");
+						oLocalModel.setProperty("/VehicalDeatils/vehicalType", "");
+						oLocalModel.setProperty("/VehicalDeatils/assignedDate", "");
+						// Clear other fields as needed
+					}
+				}.bind(this),
+				error: function (oError) {
+					sap.m.MessageToast.show("Error fetching vehicle details: " + oError.message);
+				}
+
+			})
+		},
+		onUnassignPress: function(oEvent) {
+            var oButton = oEvent.getSource();
+            var oContext = oButton.getBindingContext();
+            var oModel = oContext.getModel();
+            var oListItem = oButton.getParent().getParent(); // Accessing the ColumnListItem
+
+            var sButtonText = oButton.getText();
+            var bIsEditing = (sButtonText === "Edit");
+
+
+            if (bIsEditing) {
+                // Switch to Submit mode
+                oButton.setText("Submit");
+				var oRow = oButton.getParent(); // Assuming the button is directly inside a table row
+				var oCell = oRow.getCells()[4]; // Accessing the 5th cell (index 4) in the row
+				oCell.setEditable(true);
+
+                // Example: Enable inputs for editing
+                var oCells = oListItem.getCells();
+                for (var i = 0; i < oCells.length; i++) {
+                    var oCell = oCells[i];
+                    if (oCell instanceof sap.m.Input) {
+                        oCell.setEditable(true);
+                    }
+                }
+            } else {
+                // Handle Submit logic
+                // Example: Disable inputs after submission
+                var oCells = oListItem.getCells();
+                for (var i = 0; i < oCells.length; i++) {
+                    var oCell = oCells[i];
+                    if (oCell instanceof sap.m.Input) {
+                        oCell.setEditable(false);
+                    }
+                }
+
+                // Save changes or perform further actions
+                // For example, update the model or show a success message
+                oModel.submitChanges({
+                    success: function() {
+                        MessageBox.success("Changes saved successfully!");
+                    },
+                    error: function() {
+                        MessageBox.error("Failed to save changes.");
+                    }
+                });
+
+                // Switch back to Edit mode
+                oButton.setText("Edit");
             }
-		}
+        }
 	});
 });

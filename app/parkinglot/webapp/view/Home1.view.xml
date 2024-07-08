@@ -5,6 +5,7 @@
     xmlns:tnt="sap.tnt"
     xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
     xmlns:smartTable="sap.ui.comp.smarttable"
     height="100%"
 >
@@ -120,6 +121,7 @@
                     items="{path: '/navigation'}"
                     select=".onItemSelect"
                     mode="Inline"
+                    class="classssubheader"
                 >
                     <layoutData>
                         <OverflowToolbarLayoutData
@@ -200,6 +202,7 @@
                                         />
                                         <Input
                                             id="commentsTextArea"
+                                            submit=".vehiclesubmit"
                                             placeholder="Enter Vehicel Number"
                                             value="{localModel>/VehicalDeatils/vehicalNo}"
                                         />
@@ -513,6 +516,12 @@
                                         text="Entry Date"
                                     />
                                 </Column>
+                                <Column id="idcomlparkinglotem">
+                                    <Text
+                                        id="_IDGenTextempty"
+                                        text="Edit"
+                                    />
+                                </Column>
                             </columns>
                             <items>
                                 <ColumnListItem
@@ -544,9 +553,10 @@
                                         />
                                     </cells>
                                     <cells>
-                                        <Text
+                                        <Input
                                             id="_IDGenText17"
-                                            text="{plotNo_plot_NO}"
+                                            value="{plotNo_plot_NO}"
+                                            editable="false"
                                         />
                                     </cells>
                                     <cells>
@@ -558,8 +568,9 @@
                                     <cells>
                                         <Button
                                             id="idreviewbut"
-                                            text="Unassign"
+                                            text="Edit"
                                             press="onUnassignPress"
+                                            type="Accept"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -648,12 +659,109 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="sapUiContentPaddingreserve"
                     >
-                        <Text
-                            id="_IDGenText5"
-                            text="Provisioning"
-                        />
+                        <content>
+                            <VBox
+                                id="idreservevboxt"
+                                alignItems="Center"
+                                justifyContent="Center"
+                            >
+                                <f:SimpleForm
+                                    id="reservationForm"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true"
+                                    columnsM="2"
+                                    columnsL="3"
+                                    columnsXL="4"
+                                    class="SimpleForm"
+                                >
+                                    <Title
+                                        id="idtitlereserva"
+                                        text="RESERVATION"
+                                        class="Reserveheading"
+                                    />
+                                    <VBox id="ReserveVbox">
+                                        <Label
+                                            id="idVehicleNumberLabel"
+                                            text="Vehicle No"
+                                            class="Bold"
+                                        />
+                                        <Input
+                                            id="InputVehicleno"
+                                            value="{}"
+                                            placeholder="Enter Vehicle Number"
+                                        />
+                                        <Label
+                                            id="idDriverNameLabel"
+                                            text="Driver Name"
+                                            class="Bold"
+                                        />
+                                        <Input
+                                            id="InputDriverName"
+                                            value="{}"
+                                            placeholder="Enter Driver Name"
+                                        />
+                                        <Label
+                                            id="idphonenumberLabel"
+                                            text="Phone Number"
+                                            class="Bold"
+                                        />
+                                        <Input
+                                            id="InputPhonenumber"
+                                            value="{}"
+                                            placeholder="Enter Phone number"
+                                        />
+                                        <Label
+                                            id="idVehicletypeLabel"
+                                            text="Vehicle Type"
+                                            class="Bold"
+                                        />
+                                        <Input
+                                            id="InputVehicletype"
+                                            placeholder="Enter Vehicle Type"
+                                            value="{}"
+                                        />
+                                        <Label
+                                            id="idParkinglotLabel"
+                                            text="Parking lot"
+                                            class="Bold"
+                                        />
+                                        <Input
+                                            id="productInput1"
+                                            placeholder="Enter praking lot"
+                                            showSuggestion="true"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onValueHelpRequest"
+                                            suggestionItems="{/Parkinglot}"
+                                            value="{parkinglot_lotId}"
+                                        >
+                                            <suggestionItems>
+                                                <core:ListItem
+                                                    id="idlistitemreserve"
+                                                    key="{lotId}"
+                                                    text="{lotId}"
+                                                    additionalText="{lotId}"
+                                                />
+                                            </suggestionItems>
+                                        </Input>
+                                        <HBox
+                                            id="_IDReserveHBox1"
+                                            alignItems="Center"
+                                            class="classHbox"
+                                        >
+                                            <Button
+                                                id="idbuttonreserve"
+                                                text="Reserve"
+                                                press="onReservePressbtn"
+                                                type="Success"
+                                                class="classButton"
+                                            />
+                                        </HBox>
+                                    </VBox>
+                                </f:SimpleForm>
+                            </VBox>
+                        </content>
                     </ScrollContainer>
                     <ScrollContainer
                         id="page6"
@@ -784,7 +892,6 @@
                                             text="{unassignedDate}"
                                         />
                                     </cells>
-                                    <!-- Add more cells for additional fields -->
                                 </ColumnListItem>
                             </items>
                         </Table>

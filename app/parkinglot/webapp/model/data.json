@@ -3,11 +3,13 @@
 	"navigation": [
 		{
 			"title": "Allocate Lot",
+			"icon":"sap-icon://bus-public-transport",
 			"key": "page1"
 		},
 		{
 			"title": "All Parking lots",
-			"key": "page2"
+			"key": "page2",
+			"icon":"sap-icon://bbyd-active-sales"
 		},
 		{
 			"title": "Assigned Lots",
@@ -25,7 +27,7 @@
 		},
 		{
 			"title": "Monitoring",
-			"icon": "sap-icon://unwired",
+			"icon": "sap-icon://business-objects-experience",
 			"key":"page6"
 		},
 		{
