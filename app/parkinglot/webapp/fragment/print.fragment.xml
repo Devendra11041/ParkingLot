@@ -91,11 +91,6 @@
         </content>
         <buttons>
             <Button
-                id="saveButton"
-                text="Save"
-                press="onSavePress"
-            />
-            <Button
                 id="createButton"
                 text="Print"
                 press="onprint"

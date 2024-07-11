@@ -23,7 +23,13 @@
 		},
 		{
 			"title": "ReserveLot",
+			"icon":"sap-icon://add",
 			"key": "page5"
+		},
+		{
+			"title": "ReservedLots",
+			"icon":"sap-icon://touch",
+			"key": "page8"
 		},
 		{
 			"title": "Monitoring",

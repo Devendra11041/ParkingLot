@@ -246,7 +246,7 @@ sap.ui.define([
 				};
 				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
-						sap.m.MessageBox.success("parking lot unassigend")
+						sap.m.MessageToast.show(`Vehicle ${vehicalNo} unassigned and parking lot ${plotNo} is now available`);
 
 					},
 					error: function (oError) {
@@ -335,56 +335,183 @@ sap.ui.define([
 
 			})
 		},
-		onUnassignPress: function(oEvent) {
-            var oButton = oEvent.getSource();
-            var oContext = oButton.getBindingContext();
-            var oModel = oContext.getModel();
-            var oListItem = oButton.getParent().getParent(); // Accessing the ColumnListItem
+		onUnassignPress: function (oEvent) {
+			var oButton = oEvent.getSource();
+			var oContext = oButton.getBindingContext();
+			var oModel = oContext.getModel();
+			var oListItem = oButton.getParent().getParent(); // Accessing the ColumnListItem
 
-            var sButtonText = oButton.getText();
-            var bIsEditing = (sButtonText === "Edit");
+			var sButtonText = oButton.getText();
+			var bIsEditing = (sButtonText === "Edit");
 
 
-            if (bIsEditing) {
-                // Switch to Submit mode
-                oButton.setText("Submit");
+			if (bIsEditing) {
+				// Switch to Submit mode
+				oButton.setText("Submit");
 				var oRow = oButton.getParent(); // Assuming the button is directly inside a table row
 				var oCell = oRow.getCells()[4]; // Accessing the 5th cell (index 4) in the row
 				oCell.setEditable(true);
 
-                // Example: Enable inputs for editing
-                var oCells = oListItem.getCells();
-                for (var i = 0; i < oCells.length; i++) {
-                    var oCell = oCells[i];
-                    if (oCell instanceof sap.m.Input) {
-                        oCell.setEditable(true);
-                    }
-                }
-            } else {
-                // Handle Submit logic
-                // Example: Disable inputs after submission
-                var oCells = oListItem.getCells();
-                for (var i = 0; i < oCells.length; i++) {
-                    var oCell = oCells[i];
-                    if (oCell instanceof sap.m.Input) {
-                        oCell.setEditable(false);
-                    }
-                }
+				// Example: Enable inputs for editing
+				var oCells = oListItem.getCells();
+				for (var i = 0; i < oCells.length; i++) {
+					var oCell = oCells[i];
+					if (oCell instanceof sap.m.Input) {
+						oCell.setEditable(true);
+					}
+				}
+			} else {
+				// Handle Submit logic
+				// Example: Disable inputs after submission
+				var oCells = oListItem.getCells();
+				for (var i = 0; i < oCells.length; i++) {
+					var oCell = oCells[i];
+					if (oCell instanceof sap.m.Input) {
+						oCell.setEditable(false);
+					}
+				}
 
-                // Save changes or perform further actions
-                // For example, update the model or show a success message
-                oModel.submitChanges({
-                    success: function() {
-                        MessageBox.success("Changes saved successfully!");
-                    },
-                    error: function() {
-                        MessageBox.error("Failed to save changes.");
-                    }
-                });
+				// Save changes or perform further actions
+				// For example, update the model or show a success message
+				oModel.submitChanges({
+					success: function () {
+						MessageBox.success("Changes saved successfully!");
+					},
+					error: function () {
+						MessageBox.error("Failed to save changes.");
+					}
+				});
 
-                // Switch back to Edit mode
-                oButton.setText("Edit");
-            }
-        }
+				// Switch back to Edit mode
+				oButton.setText("Edit");
+			}
+		},
+		onReservePressbtn: async function () {
+			var oView = this.getView();
+			const oModel = oView.byId("pageContainer").getModel("ModelV2");
+
+			// Get input values
+			var sVehicleNo = oView.byId("InputVehicleno").getValue();
+			var sDriverName = oView.byId("InputDriverName").getValue();
+			var sPhoneNo = oView.byId("InputPhonenumber").getValue();
+			var sVehicleType = oView.byId("InputVehicletype").getValue();
+			var sParkingLot = oView.byId("idcombox1").getValue();
+			var oDateTimePicker = oView.byId("idinputdatepicker");
+			var oSelectedDateTime = oDateTimePicker.getDateValue();
+
+			// Validation for Phone Number
+			if (!sPhoneNo || !sPhoneNo.match(/^[9876]\d{9}$/)) {
+				sap.m.MessageBox.error("Please enter a valid phone number starting with 9, 8, 7, or 6 and exactly 10 digits.");
+				return;
+			}
+
+			// Validation for Vehicle Number
+			if (!sVehicleNo || !sVehicleNo.match(/^[\w\d]{1,10}$/)) {
+				sap.m.MessageBox.error("Please enter a valid vehicle number (alphanumeric, up to 10 characters).");
+				return;
+			}
+
+			// Validation for Vehicle Type
+			if (sVehicleType !== "inward" && sVehicleType !== "outward") {
+				sap.m.MessageBox.error("Please enter either 'inward' or 'outward' for vehicle type.");
+				return;
+			}
+
+			// Check if Vehicle Number already exists
+			const vehicleExists = await this.checkVehicleExists(oModel, sVehicleNo);
+			if (vehicleExists) {
+				sap.m.MessageBox.error("Vehicle number already exists. Please enter a different vehicle number.");
+				return;
+			}
+
+			// Construct payload for reservation entity
+			var newmodel = new sap.ui.model.json.JSONModel({
+				vehicalNo: sVehicleNo,
+				driverName: sDriverName,
+				phone: sPhoneNo,
+				vehicalType: sVehicleType,
+				plotNo_plot_NO: sParkingLot,
+				Expectedtime: oSelectedDateTime
+			});
+
+			this.getView().byId("page8").setModel(newmodel, "newmodel");
+			const oPayload = this.getView().byId("page8").getModel("newmodel").getProperty("/");
+
+			// Call OData service to create reservation
+			try {
+				await this.createData(oModel, oPayload, "/Reservation");
+				sap.m.MessageBox.success("Parking lot reserved  successfully");
+			} catch (error) {
+				sap.m.MessageBox.error("Failed to create reservation. Please try again.");
+				console.error("Error creating reservation:", error);
+			}
+		},
+
+		// Function to check if vehicle number exists in backend
+		// Function to check if vehicle number exists in backend
+		checkVehicleExists: async function (oModel, sVehicleNo) {
+			return new Promise((resolve, reject) => {
+				oModel.read("/VehicalDeatils", {
+					filters: [
+						new Filter("vehicalNo", FilterOperator.EQ, sVehicleNo)
+					],
+					success: function (oData) {
+						resolve(oData.results.length > 0);
+					},
+					error: function () {
+						reject("An error occurred while checking vehicle number existence.");
+					}
+				});
+			});
+		},
+		onReservePressbtnclear: function () {
+			var oView = this.getView();
+			oView.byId("InputVehicleno").setValue("");
+			oView.byId("InputDriverName").setValue("");
+			oView.byId("InputPhonenumber").setValue("");
+			oView.byId("InputVehicletype").setValue("");
+			oView.byId("idcombox1").setValue("");
+			oView.byId("idinputdatepicker").setValue(null); // Clear the date picker
+		},
+		onpressassignrd: async function () {
+			debugger
+			var oSelected = this.byId("ReservationTable").getSelectedItems();
+			if (oSelected.length === 0) {
+				MessageBox.error("Please Select atleast row to Assign");
+				return
+			};
+
+
+			var oSelectedRow = this.byId("ReservationTable").getSelectedItem().getBindingContext().getObject()
+            
+			var resmodel = new JSONModel ({
+				vehicalNo:oSelectedRow.vehicalNo,
+				driverName:oSelectedRow.driverName,
+				phone:oSelectedRow.phone,
+				vehicalType:oSelectedRow.vehicalType,
+				assignedDate:"",
+				plotNo_plot_NO:oSelectedRow.plotNo_plot_NO,
+			});
+			const intime = new Date;
+			
+
+			const oModel = this.getView().byId("pageContainer").getModel("ModelV2");
+			
+			this.getView().byId("page8").setModel(resmodel, "resmodel");
+			const oPayload = this.getView().byId("page8").getModel("resmodel").getProperty("/");
+
+			oPayload.assignedDate = intime;
+
+			try {
+				await this.createData(oModel, oPayload, "/VehicalDeatils");
+				sap.m.MessageBox.success("Parking lot reserved  successfully");
+			} catch (error) {
+				sap.m.MessageBox.error("Failed to create reservation. Please try again.");
+				console.error("Error creating reservation:", error);
+			}
+
+
+
+		}
 	});
 });

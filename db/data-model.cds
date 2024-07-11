@@ -37,3 +37,12 @@ entity History : cuid {
   unassignedDate : DateTime;
   plotNo         : Association to PlotNOs
 }
+
+entity Reservation : cuid {
+  vehicalNo    : String;
+  driverName   : String;
+  phone        : Integer64;
+  vehicalType  : String;
+  Expectedtime : DateTime;
+  plotNo       : Association to PlotNOs
+}

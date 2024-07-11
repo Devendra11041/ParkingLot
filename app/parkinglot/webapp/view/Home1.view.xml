@@ -678,7 +678,7 @@
                                 >
                                     <Title
                                         id="idtitlereserva"
-                                        text="RESERVATION"
+                                        text="LOT RESERVATION"
                                         class="Reserveheading"
                                     />
                                     <VBox id="ReserveVbox">
@@ -727,28 +727,44 @@
                                             text="Parking lot"
                                             class="Bold"
                                         />
-                                        <Input
-                                            id="productInput1"
-                                            placeholder="Enter praking lot"
-                                            showSuggestion="true"
-                                            showValueHelp="true"
-                                            valueHelpRequest=".onValueHelpRequest"
-                                            suggestionItems="{/Parkinglot}"
-                                            value="{parkinglot_lotId}"
+                                        <ComboBox
+                                            id="idcombox1"
+                                            placeholder="select your lot"
+                                            value="{newmodel>/plotNo_plot_NO}"
+                                            items="{
+                                            path: '/PlotNOs',
+                                             sorter: {
+                                             path: 'plot_NO'
+                                                      },
+                                               filters: [{
+                                               path: 'available',
+                                               operator: 'EQ',
+                                                value1: true
+                                               }]
+                                             }"
                                         >
-                                            <suggestionItems>
-                                                <core:ListItem
-                                                    id="idlistitemreserve"
-                                                    key="{lotId}"
-                                                    text="{lotId}"
-                                                    additionalText="{lotId}"
-                                                />
-                                            </suggestionItems>
-                                        </Input>
+                                            <core:Item
+                                                id="idcoreitems"
+                                                text="{plot_NO}"
+                                            />
+                                        </ComboBox>
+                                        <Label
+                                            id="idtypedate"
+                                            text="Date"
+                                            class="Bold"
+                                        />
+                                        <DateTimePicker
+                                            id="idinputdatepicker"
+                                            value="{
+				                            path: '/dtValue',
+			                             	type: 'sap.ui.model.type.DateTime'}"
+                                        />
+
                                         <HBox
                                             id="_IDReserveHBox1"
                                             alignItems="Center"
                                             class="classHbox"
+                                            justifyContent="Start"
                                         >
                                             <Button
                                                 id="idbuttonreserve"
@@ -756,6 +772,13 @@
                                                 press="onReservePressbtn"
                                                 type="Success"
                                                 class="classButton"
+                                            />
+                                            <Button
+                                                id="idbuttonreservew"
+                                                text="clear"
+                                                press="onReservePressbtnclear"
+                                                type="Critical"
+                                                class="classButton1"
                                             />
                                         </HBox>
                                     </VBox>
@@ -890,6 +913,126 @@
                                         <Text
                                             id="cellhistoryoutime"
                                             text="{unassignedDate}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                    <ScrollContainer
+                        id="page8"
+                        horizontal="false"
+                        vertical="true"
+                        height="100%"
+                        class="sapUiContentPadding"
+                    >
+                        <Table
+                            id="ReservationTable"
+                            class="sapUiResponsiveMargin"
+                            inset="false"
+                            width="auto"
+                            mode="MultiSelect"
+                            items="{/Reservation}"
+                            alternateRowColors="true"
+                            growingThreshold="5"
+                            growing="true"
+                        >
+                            <headerToolbar>
+                                <OverflowToolbar id="idreservationtoolbar">
+                                    <Title
+                                        id="idtitlereservation"
+                                        text="Reservations"
+                                    />
+                                    <ToolbarSpacer id="idTableHeaderreserve" />
+                                    <Button
+                                        id="idassign"
+                                        press="onpressassignrd"
+                                        text="assign"
+                                        type="Success"
+                                    />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column
+                                    id="idcolumnreservation1"
+                                    class="class01"
+                                >
+                                    <Text
+                                        text="Vehicle Number"
+                                        id="idtextreservaton1"
+                                        class="class01"
+                                    />
+                                </Column>
+                                <Column
+                                    id="idcolumnreservation2"
+                                    class="class01"
+                                >
+                                    <Text
+                                        text="Driver Name"
+                                        id="idtextreservaton2"
+                                        class="class01"
+                                    />
+                                </Column>
+                                <Column
+                                    id="idcolumnreservation3"
+                                    class="class01"
+                                >
+                                    <Text
+                                        text="Phone"
+                                        id="idtextreservaton3"
+                                        class="class01"
+                                    />
+                                </Column>
+                                <Column id="idcolumnreservation4">
+                                    <Text
+                                        text="Vehicle Type"
+                                        id="idtextreservaton4"
+                                        class="class01"
+                                    />
+                                </Column>
+                                <Column id="idcolumnreservation5">
+                                    <Text
+                                        text="Expected Time"
+                                        id="idtextreservaton5"
+                                    />
+                                </Column>
+                                <Column id="idcolumnreservation6">
+                                    <Text
+                                        text="Plot Number"
+                                        id="idtextreservaton6"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem
+                                    id="idcolumlistreservation"
+                                    press="onListItemPress"
+                                    class="classreservedlots"
+                                >
+                                    <cells>
+                                        <Text
+                                            text="{vehicalNo}"
+                                            id="idtextreservationvno"
+                                        />
+                                        <Text
+                                            text="{driverName}"
+                                            id="idtextreservationdname"
+                                        />
+                                        <Text
+                                            text="{phone}"
+                                            id="idtextreservationpno"
+                                        />
+                                        <Text
+                                            text="{vehicalType}"
+                                            id="idtextreservationvtype"
+                                        />
+                                        <Text
+                                            text="{Expectedtime}"
+                                            id="idtextreservationetime"
+                                        />
+                                        <Text
+                                            text="{plotNo_plot_NO}"
+                                            id="idtextreservationptno"
                                         />
                                     </cells>
                                 </ColumnListItem>

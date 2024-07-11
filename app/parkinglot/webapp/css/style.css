@@ -46,13 +46,34 @@
 }
 
 .sapUiContentPaddingreserve{
-    background-color: rgb(243, 197, 237);
+    background-color: rgb(157, 195, 240);
 }
 
 .classButton{
-    margin-left: 330px;
+    margin-right:0 px;
+}
+.classButton1{
+    margin-left: 50px;
 }
 
-.classHbox{
-    margin-top: 20px;
+.Bold{
+    font-weight: bold;
+    color: black;
 }
+
+.Reserveheading{
+    font-size: larger;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: darkmagenta;
+}
+
+.classreservedlots{
+    background-color: rgb(204, 244, 244);
+}
+.class01{
+    color: hotpink;
+    font-size: larger;
+    
+    
+}
+
