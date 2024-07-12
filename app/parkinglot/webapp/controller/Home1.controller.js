@@ -315,7 +315,7 @@ sap.ui.define([
 						oLocalModel.setProperty("/VehicalDeatils/phone", oVehicle.phone);
 						oLocalModel.setProperty("/VehicalDeatils/vehicalType", oVehicle.vehicalType);
 						oLocalModel.setProperty("/VehicalDeatils/assignedDate", oVehicle.assignedDate);
-						oView.byId("productInput").setValue(oVehicle.plotNo_plot_NO)
+						this.oView.byId("productInput").setValue(oVehicle.plotNo_plot_NO)
 						// Set other fields as needed
 					} else {
 						// Handle case where vehicle number was not found
@@ -473,6 +473,7 @@ sap.ui.define([
 			oView.byId("idcombox1").setValue("");
 			oView.byId("idinputdatepicker").setValue(null); // Clear the date picker
 		},
+		//Reservation lot allocation
 		onpressassignrd: async function () {
 			debugger
 			var oSelected = this.byId("ReservationTable").getSelectedItems();
@@ -481,37 +482,53 @@ sap.ui.define([
 				return
 			};
 
-
-			var oSelectedRow = this.byId("ReservationTable").getSelectedItem().getBindingContext().getObject()
-            
-			var resmodel = new JSONModel ({
-				vehicalNo:oSelectedRow.vehicalNo,
-				driverName:oSelectedRow.driverName,
-				phone:oSelectedRow.phone,
-				vehicalType:oSelectedRow.vehicalType,
-				assignedDate:"",
-				plotNo_plot_NO:oSelectedRow.plotNo_plot_NO,
-			});
+			var oSelectedRow = this.byId("ReservationTable").getSelectedItem().getBindingContext().getObject();
+			var orow = this.byId("ReservationTable").getSelectedItem().getBindingContext().getPath();
 			const intime = new Date;
-			
+			var resmodel = new JSONModel({
+				vehicalNo: oSelectedRow.vehicalNo,
+				driverName: oSelectedRow.driverName,
+				phone: oSelectedRow.phone,
+				vehicalType: oSelectedRow.vehicalType,
+				assignedDate: intime,
+				plotNo_plot_NO: oSelectedRow.plotNo_plot_NO,
+
+			});
+			var temp = oSelectedRow.plotNo_plot_NO;
 
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2");
-			
+			debugger
 			this.getView().byId("page8").setModel(resmodel, "resmodel");
-			const oPayload = this.getView().byId("page8").getModel("resmodel").getProperty("/");
+			this.getView().byId("page8").getModel("resmodel").getProperty("/");
+			oModel.create("/VehicalDeatils", resmodel.getData(), {
+				success: function (odata) {
+					sap.m.MessageToast.show("success");
+					debugger
+					oModel.remove(orow, {
+						success: function () {
+							sap.m.MessageToast.show("success");
+							oModel.refresh()
+							oModel.update("/PlotNOs('" + temp + "')", { available: false }, {
+								success: function () {
+									sap.m.MessageToast.show("success3");
+									oModel.refresh();
+								}, error: function () {
+									sap.m.MessageBox.error("HBJKLJHGVhb");
+								}
 
-			oPayload.assignedDate = intime;
+							})
+						},
+						error: function (oError) {
+							sap.m.MessageBox.error("Failed to update : " + oError.message);
+						}
 
-			try {
-				await this.createData(oModel, oPayload, "/VehicalDeatils");
-				sap.m.MessageBox.success("Parking lot reserved  successfully");
-			} catch (error) {
-				sap.m.MessageBox.error("Failed to create reservation. Please try again.");
-				console.error("Error creating reservation:", error);
-			}
+					})
 
-
-
+				},
+				error: function (oError) {
+					sap.m.MessageBox.error("Failed to update : " + oError.message);
+				}
+			})
 		}
 	});
 });

@@ -19,7 +19,6 @@ sap.ui.define(
                         refreshAfterChange: true,
                         success: function (oSuccessData) {
                             resolve(oSuccessData);
-                            debugger
                         },
                         error: function (oErrorData) {
                             reject(oErrorData)
