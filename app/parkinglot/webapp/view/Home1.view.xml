@@ -6,6 +6,10 @@
     xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout"
     xmlns:f="sap.ui.layout.form"
+    xmlns:suite="sap.suite.ui.commons"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
     xmlns:smartTable="sap.ui.comp.smarttable"
     height="100%"
 >
@@ -777,7 +781,7 @@
                                                 id="idbuttonreservew"
                                                 text="clear"
                                                 press="onReservePressbtnclear"
-                                                type="Critical"
+                                                type="Default"
                                                 class="classButton1"
                                             />
                                         </HBox>
@@ -793,10 +797,71 @@
                         height="100%"
                         class="sapUiContentPadding"
                     >
-                        <Text
-                            id="_IDGenText6"
-                            text="Monitoring"
-                        />
+                        <VBox
+                            id="vbox"
+                            fitContainer="true"
+                        >
+                            <suite:ChartContainer id="chartContainer">
+                                <suite:content>
+                                    <suite:ChartContainerContent
+                                        id="chartContainerContent"
+                                    >
+                                        <suite:content>
+                                            <viz:VizFrame
+                                                id="idpiechart"
+                                                width="auto"
+                                                uiConfig="{applicationSet:'fiori'}"
+                                                vizType="pie"
+                                                vizProperties="{
+                                                 plotArea: {
+                                                 dataLabel: {visible: true}
+                                                  },
+                                                 title: {text:'Parking Lot Availability'}
+                                                 }"
+                                                selectData="myOnClickHandler"
+                                                renderComplete="handleRenderComplete"
+                                            >
+                                                <viz:dataset>
+                                                    <viz.data:FlattenedDataset
+                                                        id="flattenData"
+                                                        data="{ParkingLotModel>/Items}"
+                                                    >
+                                                        <viz.data:dimensions>
+                                                            <viz.data:DimensionDefinition
+                                                                id="_IDGenDimensionDefinition1"
+                                                                name="available"
+                                                                value="{ParkingLotModel>available}"
+                                                            />
+                                                        </viz.data:dimensions>
+                                                        <viz.data:measures>
+                                                            <viz.data:MeasureDefinition
+                                                                id="_IDGenMeasureDefinition1"
+                                                                name="Count"
+                                                                value="{ParkingLotModel>Count}"
+                                                            />
+                                                        </viz.data:measures>
+                                                    </viz.data:FlattenedDataset>
+                                                </viz:dataset>
+                                                <viz:feeds>
+                                                    <viz.feeds:FeedItem
+                                                        id="_IDGenFeedItem1"
+                                                        uid="size"
+                                                        type="Measure"
+                                                        values="Count"
+                                                    />
+                                                    <viz.feeds:FeedItem
+                                                        id="_IDGenFeedItem2"
+                                                        uid="color"
+                                                        type="Dimension"
+                                                        values="available"
+                                                    />
+                                                </viz:feeds>
+                                            </viz:VizFrame>
+                                        </suite:content>
+                                    </suite:ChartContainerContent>
+                                </suite:content>
+                            </suite:ChartContainer>
+                        </VBox>
                     </ScrollContainer>
                     <ScrollContainer
                         id="page7"

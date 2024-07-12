@@ -17,6 +17,8 @@ sap.ui.define([
 			var oModel = new JSONModel(sap.ui.require.toUrl("com/app/parkinglot/model/data.json"));
 			this.getView().setModel(oModel);
 
+			this._setParkingLotModel();
+
 			const oLocalModel = new JSONModel({
 				VehicalDeatils: {
 					vehicalNo: "",
@@ -530,6 +532,38 @@ sap.ui.define([
 					sap.m.MessageBox.error("Failed to update : " + oError.message);
 				}
 			})
+		},
+		_setParkingLotModel: function () {
+			var oModel = this.getOwnerComponent().getModel("ModelV2");
+			var that = this;
+
+			oModel.read("/PlotNOs", {
+				success: function (oData) {
+					console.log("Fetched Data:", oData);
+					var aItems = oData.results;
+					var availableCount = aItems.filter(item => item.available === true).length;
+					var occupiedCount = aItems.filter(item => item.available === false).length;
+
+					var aChartData = {
+						Items: [
+							{
+								available: true,
+								Count: availableCount
+							},
+							{
+								available: false,
+								Count: occupiedCount
+							}
+						]
+					};
+					var oParkingLotModel = new JSONModel();
+					oParkingLotModel.setData(aChartData);
+					that.getView().setModel(oParkingLotModel, "ParkingLotModel");
+				},
+				error: function (oError) {
+					console.error(oError);
+				}
+			});
 		}
 	});
 });
