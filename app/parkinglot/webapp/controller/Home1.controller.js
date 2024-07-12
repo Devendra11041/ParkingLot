@@ -135,8 +135,7 @@ sap.ui.define([
 					}
 				);
 				return;
-			}
-
+			};
 			try {
 				// Assuming createData method sends a POST request
 				await this.createData(oModel, oPayload.VehicalDeatils, "/VehicalDeatils");
@@ -210,7 +209,6 @@ sap.ui.define([
 				})
 			})
 		},
-
 		// Clear the local model's VehicalDeatils property
 		onclearPress: function () {
 			var oLocalModel = this.getView().getModel("localModel");
@@ -226,39 +224,44 @@ sap.ui.define([
 			this.getView().byId("productInput").setValue("");
 		},
 		onUnassignPress1: async function () {
+			const that = this; // Store reference to 'this' for later use inside nested functions
 			const oPayload = this.getView().byId("page1").getModel("localModel").getProperty("/");
 			const { driverName, phone, vehicalNo, vehicalType } = this.getView().byId("page1").getModel("localModel").getProperty("/").VehicalDeatils;
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
 			const plotNo = this.getView().byId("productInput").getValue();
 			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
 
-			const newtime = new Date;
+			const newtime = new Date();
 			oPayload.VehicalDeatils.unassignedDate = newtime;
 
-			try {
-				await this.createData(oModel, oPayload.VehicalDeatils, "/History");
+			// Confirmation dialog before proceeding
+			sap.m.MessageBox.confirm("Are you sure you want to unassign the parking lot?", {
+				title: "Confirmation",
+				onClose: async function (oAction) {
+					if (oAction === sap.m.MessageBox.Action.OK) {
+						try {
+							await that.createData(oModel, oPayload.VehicalDeatils, "/History");
 
-				await this.deleteData(oModel, "/VehicalDeatils", vehicalNo);
+							await that.deleteData(oModel, "/VehicalDeatils", vehicalNo);
 
-				const updatedParkingLot = {
-					available: true // Assuming false represents empty parking
-					// Add other properties if needed
-				};
-				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
-					success: function () {
-						sap.m.MessageToast.show(`Vehicle ${vehicalNo} unassigned and parking lot ${plotNo} is now available`);
-
-					},
-					error: function (oError) {
-
-						sap.m.MessageBox.error("Failed to update : " + oError.message);
+							const updatedParkingLot = {
+								available: true // Assuming false represents empty parking
+								// Add other properties if needed
+							};
+							oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
+								success: function () {
+									sap.m.MessageToast.show(`Vehicle ${vehicalNo} unassigned and parking lot ${plotNo} is now available`);
+								},
+								error: function (oError) {
+									sap.m.MessageBox.error("Failed to update : " + oError.message);
+								}
+							});
+						} catch (error) {
+							sap.m.MessageBox.error("Some technical Issue");
+						}
 					}
-				});
-			} catch (error) {
-
-				sap.m.MessageBox.error("Some technical Issue");
-			}
-
+				}
+			});
 		},
 		OnPrintpress: async function () {
 			var oSelected = this.byId("AssignedSlotsTable").getSelectedItems();
@@ -502,15 +505,13 @@ sap.ui.define([
 			this.getView().byId("page8").getModel("resmodel").getProperty("/");
 			oModel.create("/VehicalDeatils", resmodel.getData(), {
 				success: function (odata) {
-					sap.m.MessageToast.show("success");
 					debugger
 					oModel.remove(orow, {
 						success: function () {
-							sap.m.MessageToast.show("success");
 							oModel.refresh()
 							oModel.update("/PlotNOs('" + temp + "')", { available: false }, {
 								success: function () {
-									sap.m.MessageToast.show("success3");
+									sap.m.MessageBox.success(`Reserved Vehicle ${oSelectedRow.vehicalNo} assigned successfully to plot ${oSelectedRow.plotNo_plot_NO}.`);
 									oModel.refresh();
 								}, error: function () {
 									sap.m.MessageBox.error("HBJKLJHGVhb");
