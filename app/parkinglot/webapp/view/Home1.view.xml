@@ -521,12 +521,10 @@
                                     />
                                 </Column>
                                 <Column id="idcomlparkinglotem">
-                                    <Text
-                                        id="_IDGenTextempty"
-                                        text="Edit"
-                                    />
+                                    <Text id="_IDGenTextempty" />
                                 </Column>
                             </columns>
+
                             <items>
                                 <ColumnListItem
                                     id="Assignedslots"
@@ -557,11 +555,27 @@
                                         />
                                     </cells>
                                     <cells>
-                                        <Input
-                                            id="_IDGenText17"
-                                            value="{plotNo_plot_NO}"
-                                            editable="false"
-                                        />
+                                        <VBox id="idedittext">
+                                            <Input
+                                                id="_IDGenText17"
+                                                value="{plotNo_plot_NO}"
+                                                editable="false"
+                                                visible="true"
+                                            />
+                                            <Select
+                                                visible="false"
+                                                id="parkingLotSelect"
+                                                required="true"
+                                                editable="true"
+                                                items="{path: '/PlotNOs', filters: [{path: 'available', operator: 'EQ', value1:true }]}"
+                                            >
+                                                <core:Item
+                                                    id="_IDGenItem3"
+                                                    key="{plot_NO}"
+                                                    text="{plot_NO}"
+                                                />
+                                            </Select>
+                                        </VBox>
                                     </cells>
                                     <cells>
                                         <Text
@@ -573,7 +587,7 @@
                                         <Button
                                             id="idreviewbut"
                                             text="Edit"
-                                            press="onUnassignPress"
+                                            press="onEditpress"
                                             type="Accept"
                                         />
                                     </cells>

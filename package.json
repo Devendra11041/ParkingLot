@@ -8,7 +8,8 @@
   "dependencies": {
     "@sap/cds": "^7",
     "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
-    "express": "^4"
+    "express": "^4",
+    "update": "^0.7.4"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1",

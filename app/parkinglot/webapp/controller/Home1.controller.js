@@ -6,9 +6,10 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
+	"sap/ui/core/format/DateFormat",
 	"sap/m/MessageBox"
 
-], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, FilterOperator, MessageBox) {
+], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, FilterOperator, MessageBox, DateFormat) {
 	"use strict";
 
 	return Controller.extend("com.app.parkinglot.controller.Home1", {
@@ -36,8 +37,9 @@ sap.ui.define([
 			this.getView().setModel(oLocalModel, "localModel");
 
 			var oModelV2 = this.getOwnerComponent().getModel("ModelV2");
-			this.getView().byId("pageContainer").setModel(oModelV2);
-
+			if (oModelV2) {
+				this.getView().byId("pageContainer").setModel(oModelV2);
+			}
 		},
 
 		onItemSelect: function (oEvent) {
@@ -258,6 +260,7 @@ sap.ui.define([
 									sap.m.MessageBox.error("Failed to update : " + oError.message);
 								}
 							});
+							this.onclearPress1();
 						} catch (error) {
 							sap.m.MessageBox.error("Some technical Issue");
 						}
@@ -265,7 +268,24 @@ sap.ui.define([
 				}
 			});
 		},
+		//clearing the input values
+		onclearPress1:function () {
+            var oLocalModel = this.getView().getModel("localModel");
+            oLocalModel.setProperty("/VehicalDeatils", {
+                vehicalNo: "",
+				driverName: "",
+				phone: "",
+				vehicalType: "",
+				plotNo_plot_NO: ""
+            });
+ 
+            // Clear any other necessary fields or models
+            this.getView().byId("productInput").setValue("");
+
+		},
+		//Print function
 		OnPrintpress: async function () {
+			debugger
 			var oSelected = this.byId("AssignedSlotsTable").getSelectedItems();
 			if (oSelected.length === 0) {
 				MessageBox.error("Please Select atleast one Book to Edit");
@@ -340,57 +360,69 @@ sap.ui.define([
 
 			})
 		},
-		onUnassignPress: function (oEvent) {
+		//Edit function
+		onEditpress: function (oEvent) {
+			debugger;
 			var oButton = oEvent.getSource();
-			var oContext = oButton.getBindingContext();
-			var oModel = oContext.getModel();
-			var oListItem = oButton.getParent().getParent(); // Accessing the ColumnListItem
-
 			var sButtonText = oButton.getText();
-			var bIsEditing = (sButtonText === "Edit");
-
-
-			if (bIsEditing) {
-				// Switch to Submit mode
+		
+			var oRow = oButton.getParent(); // Get the table row
+			var oCell = oRow.getCells()[4]; // Assuming the 5th cell contains both Text and ComboBox
+		
+			var oText = oCell.getItems()[0]; // Assuming the first item is Text
+			var oComboBox = oCell.getItems()[1]; // Assuming the second item is ComboBox
+		
+			if (sButtonText === "Edit") {
+				// Switching to edit mode
 				oButton.setText("Submit");
-				var oRow = oButton.getParent(); // Assuming the button is directly inside a table row
-				var oCell = oRow.getCells()[4]; // Accessing the 5th cell (index 4) in the row
-				oCell.setEditable(true);
-
-				// Example: Enable inputs for editing
-				var oCells = oListItem.getCells();
-				for (var i = 0; i < oCells.length; i++) {
-					var oCell = oCells[i];
-					if (oCell instanceof sap.m.Input) {
-						oCell.setEditable(true);
-					}
-				}
+				oText.setVisible(false);
+				oComboBox.setVisible(true);
+				oComboBox.setEditable(true);
 			} else {
-				// Handle Submit logic
-				// Example: Disable inputs after submission
-				var oCells = oListItem.getCells();
-				for (var i = 0; i < oCells.length; i++) {
-					var oCell = oCells[i];
-					if (oCell instanceof sap.m.Input) {
-						oCell.setEditable(false);
-					}
-				}
-
-				// Save changes or perform further actions
-				// For example, update the model or show a success message
-				oModel.submitChanges({
+				// Switching back to display mode
+				oButton.setText("Edit");
+				oText.setVisible(true);
+				oComboBox.setVisible(false);
+				oComboBox.setEditable(false);
+		
+				var otemp = oButton.getParent().getBindingContext().getObject().vehicalNo;
+				var oval = oText.getValue(); // Old plotNo
+				var oc = oComboBox.getSelectedKey(); // New plotNo
+				var oModel = this.getView().getModel("ModelV2");
+				var that = this;
+		
+				// Update VehicalDeatils entity
+				oModel.update("/VehicalDeatils('" + otemp + "')", { plotNo_plot_NO: oc }, {
 					success: function () {
-						MessageBox.success("Changes saved successfully!");
+						sap.m.MessageToast.show("VehicalDeatils updated successfully!");
+		
+						// Update PlotNOs entities sequentially
+						oModel.update("/PlotNOs('" + oval + "')", { available: true }, {
+							success: function () {
+								// Now update the new plotNo
+								oModel.update("/PlotNOs('" + oc + "')", { available: false }, {
+									success: function () {
+										sap.m.MessageToast.show("PlotNOs updated successfully!");
+										oModel.refresh(true);
+										that.getView().byId("AssignedSlotsTable").getBinding("items").refresh(true);
+									},
+									error: function () {
+										sap.m.MessageBox.error("Error occurs while updating new plotNo availability!");
+									}
+								});
+							},
+							error: function () {
+								sap.m.MessageBox.error("Error occurs while updating old plotNo availability!");
+							}
+						});
 					},
 					error: function () {
-						MessageBox.error("Failed to save changes.");
+						sap.m.MessageBox.error("Error occurs while updating VehicalDeatils!");
 					}
 				});
-
-				// Switch back to Edit mode
-				oButton.setText("Edit");
 			}
 		},
+		//Parking lot Reservations
 		onReservePressbtn: async function () {
 			var oView = this.getView();
 			const oModel = oView.byId("pageContainer").getModel("ModelV2");
@@ -533,6 +565,7 @@ sap.ui.define([
 				}
 			})
 		},
+		//function for the pie chart
 		_setParkingLotModel: function () {
 			var oModel = this.getOwnerComponent().getModel("ModelV2");
 			var that = this;
@@ -548,11 +581,14 @@ sap.ui.define([
 						Items: [
 							{
 								available: true,
-								Count: availableCount
+								Count: availableCount,
+								available: " Empty",
+								
 							},
 							{
 								available: false,
-								Count: occupiedCount
+								Count: occupiedCount,
+								available: "Not Empty"
 							}
 						]
 					};
