@@ -3,127 +3,139 @@ ID: ParkingLot
 description: A simple CAP project.
 version: 1.0.0
 modules:
-  - name: ParkingLot-srv
-    type: nodejs
-    path: gen/srv
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
+- name: ParkingLot-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: ParkingLot-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: ParkingLot-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: ParkingLot-destination-service
     parameters:
-      buildpack: nodejs_buildpack
-      readiness-health-check-http-endpoint: /health
-      readiness-health-check-type: http
-    build-parameters:
-      builder: npm
-    requires:
-      - name: ParkingLot-db
-  - name: ParkingLot-destination-content
-    type: com.sap.application.content
-    requires:
-      - name: ParkingLot-destination-service
-        parameters:
-          content-target: true
-      - name: ParkingLot_html_repo_host
-        parameters:
-          service-key:
-            name: ParkingLot_html_repo_host-key
-      - name: uaa_ParkingLot
-        parameters:
-          service-key:
-            name: uaa_ParkingLot-key
+      content-target: true
+  - name: ParkingLot_html_repo_host
     parameters:
-      content:
+      service-key:
+        name: ParkingLot_html_repo_host-key
+  - name: uaa_ParkingLot
+    parameters:
+      service-key:
+        name: uaa_ParkingLot-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: ParkingLot_ParkingLot_html_repo_host
+          ServiceInstanceName: ParkingLot-html5-app-host-service
+          ServiceKeyName: ParkingLot_html_repo_host-key
+          sap.cloud.service: ParkingLot
+        - Authentication: OAuth2UserTokenExchange
+          Name: ParkingLot_uaa_ParkingLot
+          ServiceInstanceName: ParkingLot-xsuaa-service
+          ServiceKeyName: uaa_ParkingLot-key
+          sap.cloud.service: ParkingLot
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: ParkingLot-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: ParkingLot_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comappparkinglot.zip
+      name: comappparkinglot
+      target-path: resources/
+    - artifacts:
+      - comappvendorpage.zip
+      name: comappvendorpage
+      target-path: resources/
+- name: comappparkinglot
+  type: html5
+  path: app/parkinglot
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: ParkingLot-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: ParkingLot-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: comappvendorpage
+  type: html5
+  path: app/vendorpage
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: ParkingLot-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
         instance:
           destinations:
-            - Name: ParkingLot_ParkingLot_html_repo_host
-              ServiceInstanceName: ParkingLot-html5-app-host-service
-              ServiceKeyName: ParkingLot_html_repo_host-key
-              sap.cloud.service: ParkingLot
-            - Authentication: OAuth2UserTokenExchange
-              Name: ParkingLot_uaa_ParkingLot
-              ServiceInstanceName: ParkingLot-xsuaa-service
-              ServiceKeyName: uaa_ParkingLot-key
-              sap.cloud.service: ParkingLot
-          existing_destinations_policy: ignore
-    build-parameters:
-      no-source: true
-  - name: ParkingLot-app-content
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: ParkingLot_html_repo_host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - comappparkinglot.zip
-          name: comappparkinglot
-          target-path: resources/
-  - name: comappparkinglot
-    type: html5
-    path: app/parkinglot
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms:
-        []
-
-  - name: ParkingLot-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: ParkingLot-db
-resources:
-  - name: ParkingLot-destination-service
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
-                URL: https://ui5.sap.com
-            existing_destinations_policy: update
-        version: 1.0.0
-      service: destination
-      service-name: ParkingLot-destination-service
-      service-plan: lite
-  - name: ParkingLot_html_repo_host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-name: ParkingLot-html5-app-host-service
-      service-plan: app-host
-  - name: uaa_ParkingLot
-    type: org.cloudfoundry.managed-service
-    parameters:
-      path: ./xs-security.json
-      service: xsuaa
-      service-name: ParkingLot-xsuaa-service
-      service-plan: application
-  - name: ParkingLot-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: ParkingLot-destination-service
+    service-plan: lite
+- name: ParkingLot_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: ParkingLot-html5-app-host-service
+    service-plan: app-host
+- name: uaa_ParkingLot
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: ParkingLot-xsuaa-service
+    service-plan: application
+- name: ParkingLot-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

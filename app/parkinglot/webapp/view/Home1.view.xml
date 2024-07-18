@@ -15,7 +15,10 @@
 >
     <tnt:ToolPage id="toolPage">
         <tnt:header>
-            <tnt:ToolHeader id="_IDGenToolHeader1">
+            <tnt:ToolHeader
+                id="_IDGenToolHeader1"
+                class="classHeader"
+            >
                 <Image
                     id="_IDGenImage1"
                     height="1.5rem"
@@ -378,11 +381,10 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpage2"
                     >
                         <Table
                             id="AllSlotsTable"
-                            class="tableclass"
                             alternateRowColors="true"
                             growing="true"
                             width="100%"
@@ -402,21 +404,24 @@
                             </headerToolbar>
                             <columns>
                                 <Column id="idcolslotno">
-                                    <Text
+                                    <Title
                                         id="idtextslotno"
                                         text="Slot Number"
+                                        class="classt2"
                                     />
                                 </Column>
                                 <Column id="idcolparkintype">
-                                    <Text
+                                    <Title
                                         id="idtextparkintype"
                                         text="Parking Type"
+                                        class="classt2"
                                     />
                                 </Column>
                                 <Column id="idcolstatus">
-                                    <Text
+                                    <Title
                                         id="idtextstatus"
                                         text="Status"
+                                        class="classt2"
                                     />
                                 </Column>
                             </columns>
@@ -455,7 +460,7 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpage3"
                     >
                         <Table
                             id="AssignedSlotsTable"
@@ -485,39 +490,45 @@
                             </headerToolbar>
                             <columns>
                                 <Column id="idcolvehicleno">
-                                    <Text
+                                    <Title
                                         id="_IDGenText8"
                                         text="Vehicle Number"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcoldrivername">
-                                    <Text
+                                    <Title
                                         id="_IDGenText9"
                                         text="Driver Name"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcoldriverph">
-                                    <Text
+                                    <Title
                                         id="_IDGenText10"
                                         text="Driver Ph Number"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcolvehicletype">
-                                    <Text
+                                    <Title
                                         id="_IDGenText11"
                                         text="Vehicle Type"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcolparkinglot">
-                                    <Text
+                                    <Title
                                         id="_IDGenText12"
                                         text="Parking Lot number"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcomlparkinglot">
-                                    <Text
+                                    <Title
                                         id="_IDGenTextdate"
                                         text="Entry Date"
+                                        class="classt3"
                                     />
                                 </Column>
                                 <Column id="idcomlparkinglotem">
@@ -600,7 +611,7 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpage4"
                     >
                         <Table
                             id="EmptySlotsTable"
@@ -626,21 +637,24 @@
                             </headerToolbar>
                             <columns>
                                 <Column id="idcolemptyslotno">
-                                    <Text
+                                    <Title
                                         id="idtextsemptylotno"
                                         text="Slot Number"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolemptyparkintype">
-                                    <Text
+                                    <Title
                                         id="idtextemptyparkintype"
                                         text="Parking Type"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolemptystatus">
-                                    <Text
+                                    <Title
                                         id="idtextemptystatus"
                                         text="Status"
+                                        class="text"
                                     />
                                 </Column>
                             </columns>
@@ -684,6 +698,7 @@
                                 id="idreservevboxt"
                                 alignItems="Center"
                                 justifyContent="Center"
+                                class="classsimpleform"
                             >
                                 <f:SimpleForm
                                     id="reservationForm"
@@ -773,9 +788,11 @@
                                         />
                                         <DateTimePicker
                                             id="idinputdatepicker"
-                                            value="{
-				                            path: '/dtValue',
-			                             	type: 'sap.ui.model.type.DateTime'}"
+                                            value="{path: '/dtValue', type: 'sap.ui.model.type.DateTime'}"
+                                            valueFormat="yyyy-MM-ddTHH:mm:ss"
+                                            displayFormat="dd.MM.yyyy HH:mm"
+                                            dateValue="{/today}"
+                                            placeholder="Select Date and Time"
                                         />
 
                                         <HBox
@@ -875,6 +892,96 @@
                                     </suite:ChartContainerContent>
                                 </suite:content>
                             </suite:ChartContainer>
+                            <suite:ChartContainer id="chartContainer123">
+                                <suite:content>
+                                    <suite:ChartContainerContent
+                                        id="chartContainerContent333"
+                                    >
+                                        <suite:content>
+                                            <viz:VizFrame
+                                                id="idBarChart"
+                                                width="auto"
+                                                height="600px"
+                                                uiConfig="{applicationSet:'fiori'}"
+                                                vizType="column"
+                                                vizProperties="{
+                            plotArea: {
+                                dataLabel: {visible: true}
+                            },
+                            title: {text:'Vehicle Assignment History by Type'},
+                            valueAxis: {
+                                title: {
+                                    visible: true,
+                                    text: 'Count'
+                                },
+                                label: {
+                                    formatString: '#,##0'
+                                },
+                                interval: {
+                                    value: 5
+                                }
+                            },
+                            categoryAxis: {
+                                title: {
+                                    visible: true,
+                                    text: 'Date'
+                                }
+                            }
+                        }"
+                                                selectData="onSelectData"
+                                                renderComplete="handleRenderComplete"
+                                            >
+                                                <viz:dataset>
+                                                    <viz.data:FlattenedDataset
+                                                        id="flattenData0"
+                                                        data="{HistoryModel>/Items}"
+                                                    >
+                                                        <viz.data:dimensions>
+                                                            <viz.data:DimensionDefinition
+                                                                id="_IDGenDimensionDefinition2"
+                                                                name="Date"
+                                                                value="{HistoryModel>date}"
+                                                            />
+                                                        </viz.data:dimensions>
+                                                        <viz.data:measures>
+                                                            <viz.data:MeasureDefinition
+                                                                id="_IDGenMeasureDefinition2"
+                                                                name="Inward Count"
+                                                                value="{HistoryModel>inwardCount}"
+                                                            />
+                                                            <viz.data:MeasureDefinition
+                                                                id="_IDGenMeasureDefinition3"
+                                                                name="Outward Count"
+                                                                value="{HistoryModel>outwardCount}"
+                                                            />
+                                                        </viz.data:measures>
+                                                    </viz.data:FlattenedDataset>
+                                                </viz:dataset>
+                                                <viz:feeds>
+                                                    <viz.feeds:FeedItem
+                                                        id="_IDGenFeedItem3"
+                                                        uid="valueAxis"
+                                                        type="Measure"
+                                                        values="Inward Count"
+                                                    />
+                                                    <viz.feeds:FeedItem
+                                                        id="_IDGenFeedItem4"
+                                                        uid="valueAxis"
+                                                        type="Measure"
+                                                        values="Outward Count"
+                                                    />
+                                                    <viz.feeds:FeedItem
+                                                        id="_IDGenFeedItem7"
+                                                        uid="categoryAxis"
+                                                        type="Dimension"
+                                                        values="Date"
+                                                    />
+                                                </viz:feeds>
+                                            </viz:VizFrame>
+                                        </suite:content>
+                                    </suite:ChartContainerContent>
+                                </suite:content>
+                            </suite:ChartContainer>
                         </VBox>
                     </ScrollContainer>
                     <ScrollContainer
@@ -905,45 +1012,52 @@
                             </headerToolbar>
                             <columns>
                                 <Column id="idcolvehiclenoHistory">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryvhno"
                                         text="Vehicle Number"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcoldrivernameHistory">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryname"
                                         text="Driver Name"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcoldriverphHistory">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryphno"
                                         text="Driver Ph Number"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolvehicletypeHistory">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryvtype"
                                         text="Vehicle Type"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolparkinglotHistory">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryplot"
                                         text="Parking Lot Number"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolintime">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryintime"
                                         text="In Time"
+                                        class="text"
                                     />
                                 </Column>
                                 <Column id="idcolouttime">
-                                    <Text
+                                    <Title
                                         id="idtexthistoryoutime"
                                         text="Out Time"
+                                        class="text"
                                     />
                                 </Column>
                             </columns>
@@ -1003,7 +1117,7 @@
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPadding"
+                        class="classpage8"
                     >
                         <Table
                             id="ReservationTable"
@@ -1023,6 +1137,12 @@
                                         text="Reservations"
                                     />
                                     <ToolbarSpacer id="idTableHeaderreserve" />
+                                    <SearchField
+                                        id="idSearchField"
+                                        width="200px"
+                                        placeholder="Search..."
+                                        liveChange="onSearch"
+                                    />
                                     <Button
                                         id="idassign"
                                         press="onpressassignrd"
@@ -1032,53 +1152,46 @@
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
-                                <Column
-                                    id="idcolumnreservation1"
-                                    class="class01"
-                                >
-                                    <Text
+                                <Column id="idcolumnreservation1">
+                                    <Title
                                         text="Vehicle Number"
                                         id="idtextreservaton1"
-                                        class="class01"
+                                        class="classp7"
                                     />
                                 </Column>
-                                <Column
-                                    id="idcolumnreservation2"
-                                    class="class01"
-                                >
-                                    <Text
+                                <Column id="idcolumnreservation2">
+                                    <Title
                                         text="Driver Name"
                                         id="idtextreservaton2"
-                                        class="class01"
+                                        class="classp7"
                                     />
                                 </Column>
-                                <Column
-                                    id="idcolumnreservation3"
-                                    class="class01"
-                                >
-                                    <Text
+                                <Column id="idcolumnreservation3">
+                                    <Title
                                         text="Phone"
                                         id="idtextreservaton3"
-                                        class="class01"
+                                        class="classp7"
                                     />
                                 </Column>
                                 <Column id="idcolumnreservation4">
-                                    <Text
+                                    <Title
                                         text="Vehicle Type"
                                         id="idtextreservaton4"
-                                        class="class01"
+                                        class="classp7"
                                     />
                                 </Column>
                                 <Column id="idcolumnreservation5">
-                                    <Text
+                                    <Title
                                         text="Expected Time"
                                         id="idtextreservaton5"
+                                        class="classp7"
                                     />
                                 </Column>
                                 <Column id="idcolumnreservation6">
-                                    <Text
+                                    <Title
                                         text="Plot Number"
                                         id="idtextreservaton6"
+                                        class="classp7"
                                     />
                                 </Column>
                             </columns>

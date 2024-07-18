@@ -6,7 +6,7 @@
 .bold-red-label {
     font-weight: bold;
     /* color: rgb(40, 225, 11); */
-    color:black; /* White text */
+    color:rgb(243, 13, 13); /* White text */
     padding: 5px 5px; /* Padding around text */
     border: none; /* No border */
     cursor: pointer; /* Pointer cursor on hover */
@@ -21,14 +21,28 @@
     background-size: cover;
 }
 
+/* Back Ground Color for Pages */
 .classpage1{
-    background-color: aliceblue;
+    background-color: rgb(235, 246, 233);
 }
 
 .classtable2{
     background-color: rgb(255, 233, 198);
     
 }
+.classpage2{
+    background-color: rgb(210, 244, 176);
+}
+.classpage3{
+    background-color: rgb(221, 221, 248);
+}
+.classpage4{
+    background-color: rgb(245, 230, 225);
+}
+.classpage8{
+    background-color: rgb(212, 244, 212);
+}
+/* Back Ground Color for Pages */
 
 .classassigned{
     background-color: rgb(243, 214, 238);
@@ -58,22 +72,48 @@
 
 .Bold{
     font-weight: bold;
-    color: black;
+    color: rgb(89, 18, 231);
+    margin-top: 10px;
+    margin-right: 0;
 }
 
 .Reserveheading{
     font-size: larger;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: darkmagenta;
+
 }
 
 .classreservedlots{
-    background-color: rgb(204, 244, 244);
-}
-.class01{
-    color: hotpink;
-    font-size: larger;
-    
-    
+    background-color: rgb(240, 218, 128);
 }
 
+.text{
+    color:rgb(226, 13, 63)
+}
+
+/* colors for second table header*/
+.classt2{
+    color:blue
+}
+/* colors for Third table header*/
+.classt3{
+    color:#e25310
+}
+
+.classp5{
+color:chocolate
+}
+/* colors for 7th table header*/
+.classp7{
+    color:navy
+}
+.classsimpleform{
+    margin-top: 50px;
+    margin-right: 0;
+}
+.SimpleForm{
+    font-size:medium;
+    font-weight: bolder;
+    color: blue;
+}

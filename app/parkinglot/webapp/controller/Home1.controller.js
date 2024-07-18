@@ -19,12 +19,28 @@ sap.ui.define([
 			this.getView().setModel(oModel);
 
 			this._setParkingLotModel();
+			this._setHistoryModel();
+
+			var today = new Date();
+
+			// Set the minimum date to tomorrow
+			var tomorrow = new Date(today);
+			tomorrow.setDate(today.getDate() + 1);
+
+			// Set the minimum date for the date picker
+			var oDateTimePicker = this.getView().byId("idinputdatepicker");
+			oDateTimePicker.setMinDate(tomorrow);
+
+			// Set display format to show only date
+			oDateTimePicker.setDisplayFormat("yyyy-MM-dd");
+
+
 
 			const oLocalModel = new JSONModel({
 				VehicalDeatils: {
 					vehicalNo: "",
 					driverName: "",
-					phone: 0,
+					phone: "",
 					vehicalType: "",
 					assignedDate: "",
 					unassignedDate: "",
@@ -130,14 +146,17 @@ sap.ui.define([
 				MessageToast.show("Vehicle already exsist")
 				return
 			};
-			const plotAvailability = await this.checkPlotAvailability(oModel, plotNo);
-			if (!plotAvailability) {
-				sap.m.MessageBox.information(`${plotNo} is not available now.Choose another Parking Lot.`,
-					{
-						title: "Allocation Information",
-						actions: sap.m.MessageBox.Action.OK
-					}
-				);
+			var phoneExists = await this.checkPhoneExists(oModel, trimmedPhone);
+			if (phoneExists) {
+				sap.m.MessageBox.error("Phone number already associated with another vehicle Please Check mobile number");
+				return;
+			};
+			var isReserved = await this.checkParkingLotReservation(oModel, plotNo);
+			if (isReserved) {
+				sap.m.MessageBox.error(`Parking lot ${plotNo} is already reserved. Please select another parking lot.`, {
+					title: "Reservation Information",
+					actions: sap.m.MessageBox.Action.OK
+				});
 				return;
 			};
 			try {
@@ -165,6 +184,23 @@ sap.ui.define([
 				console.error("Error:", error);
 			}
 		},
+		//validation for phone no checking
+		checkPhoneExists: async function (oModel, trimmedPhone) {
+			return new Promise((resolve, reject) => {
+				oModel.read("/VehicalDeatils", {
+					filters: [
+						new sap.ui.model.Filter("phone", sap.ui.model.FilterOperator.EQ, trimmedPhone)
+					],
+					success: function (oData) {
+						resolve(oData.results.length > 0);
+					},
+					error: function () {
+						reject("An error occurred while checking phone number existence.");
+					}
+				});
+			});
+		},
+		//validation for Vehicle no checking
 		checkVehicleNo: async function (oModel, sVehicalNo) {
 			return new Promise((resolve, reject) => {
 				oModel.read("/VehicalDeatils", {
@@ -183,14 +219,18 @@ sap.ui.define([
 				})
 			})
 		},
-		checkPlotAvailability: async function (oModel, plotNo) {
+		//validation for plotAvailability checking
+		checkParkingLotReservation: async function (oModel, plotNo) {
 			return new Promise((resolve, reject) => {
-				oModel.read("/PlotNOs('" + plotNo + "')", {
+				oModel.read("/Reservation", {
+					filters: [
+						new sap.ui.model.Filter("plotNo_plot_NO", sap.ui.model.FilterOperator.EQ, plotNo)
+					],
 					success: function (oData) {
-						resolve(oData.available);
+						resolve(oData.results.length > 0);
 					},
-					error: function (oError) {
-						reject("Error checking plot availability: " + oError.message);
+					error: function () {
+						reject("An error occurred while checking parking lot reservation.");
 					}
 				});
 			});
@@ -260,28 +300,13 @@ sap.ui.define([
 									sap.m.MessageBox.error("Failed to update : " + oError.message);
 								}
 							});
-							this.onclearPress1();
+							// this.onclearPress1();
 						} catch (error) {
 							sap.m.MessageBox.error("Some technical Issue");
 						}
 					}
 				}
 			});
-		},
-		//clearing the input values
-		onclearPress1:function () {
-            var oLocalModel = this.getView().getModel("localModel");
-            oLocalModel.setProperty("/VehicalDeatils", {
-                vehicalNo: "",
-				driverName: "",
-				phone: "",
-				vehicalType: "",
-				plotNo_plot_NO: ""
-            });
- 
-            // Clear any other necessary fields or models
-            this.getView().byId("productInput").setValue("");
-
 		},
 		//Print function
 		OnPrintpress: async function () {
@@ -365,13 +390,13 @@ sap.ui.define([
 			debugger;
 			var oButton = oEvent.getSource();
 			var sButtonText = oButton.getText();
-		
+
 			var oRow = oButton.getParent(); // Get the table row
 			var oCell = oRow.getCells()[4]; // Assuming the 5th cell contains both Text and ComboBox
-		
+
 			var oText = oCell.getItems()[0]; // Assuming the first item is Text
 			var oComboBox = oCell.getItems()[1]; // Assuming the second item is ComboBox
-		
+
 			if (sButtonText === "Edit") {
 				// Switching to edit mode
 				oButton.setText("Submit");
@@ -384,18 +409,18 @@ sap.ui.define([
 				oText.setVisible(true);
 				oComboBox.setVisible(false);
 				oComboBox.setEditable(false);
-		
+
 				var otemp = oButton.getParent().getBindingContext().getObject().vehicalNo;
 				var oval = oText.getValue(); // Old plotNo
 				var oc = oComboBox.getSelectedKey(); // New plotNo
 				var oModel = this.getView().getModel("ModelV2");
 				var that = this;
-		
+
 				// Update VehicalDeatils entity
 				oModel.update("/VehicalDeatils('" + otemp + "')", { plotNo_plot_NO: oc }, {
 					success: function () {
 						sap.m.MessageToast.show("VehicalDeatils updated successfully!");
-		
+
 						// Update PlotNOs entities sequentially
 						oModel.update("/PlotNOs('" + oval + "')", { available: true }, {
 							success: function () {
@@ -427,7 +452,7 @@ sap.ui.define([
 			var oView = this.getView();
 			const oModel = oView.byId("pageContainer").getModel("ModelV2");
 
-			// Get input values
+
 			var sVehicleNo = oView.byId("InputVehicleno").getValue();
 			var sDriverName = oView.byId("InputDriverName").getValue();
 			var sPhoneNo = oView.byId("InputPhonenumber").getValue();
@@ -582,13 +607,13 @@ sap.ui.define([
 							{
 								available: true,
 								Count: availableCount,
-								available: " Empty",
-								
+								available: "Empty Lots",
+
 							},
 							{
 								available: false,
 								Count: occupiedCount,
-								available: "Not Empty"
+								available: "Not Empty Lots"
 							}
 						]
 					};
@@ -600,6 +625,77 @@ sap.ui.define([
 					console.error(oError);
 				}
 			});
+		},
+		_setHistoryModel: function () {
+			var oModel = this.getOwnerComponent().getModel("ModelV2");
+			var that = this;
+
+			oModel.read("/History", {
+				success: function (oData) {
+					console.log("Fetched Data:", oData);
+					var aItems = oData.results;
+
+					var oProcessedData = that._processHistoryData(aItems);
+
+					var oHistoryModel = new JSONModel();
+					oHistoryModel.setData(oProcessedData);
+					that.getView().setModel(oHistoryModel, "HistoryModel");
+				},
+				error: function (oError) {
+					console.error(oError);
+				}
+			});
+		},
+
+		_processHistoryData: function (aItems) {
+			var oData = {};
+
+			aItems.forEach(function (item) {
+				var date = new Date(item.assignedDate).toISOString().split("T")[0]; // Convert date to ISO string and extract date part
+
+				if (!oData[date]) {
+					oData[date] = {
+						date: date,
+						inwardCount: 0,
+						outwardCount: 0
+					};
+				}
+
+				if (item.vehicalType === "inward") {
+					oData[date].inwardCount += 1;
+				} else if (item.vehicalType === "outward") {
+					oData[date].outwardCount += 1;
+				}
+			});
+
+			return {
+				Items: Object.values(oData)
+			};
+		},
+
+		onSelectData: function (oEvent) {
+			var oSelectedData = oEvent.getParameter("data")[0].data;
+			sap.m.MessageToast.show("Selected Date: " + oSelectedData.date + "\nInward Count: " + oSelectedData.inwardCount + "\nOutward Count: " + oSelectedData.outwardCount);
+		},
+
+		handleRenderComplete: function (oEvent) {
+			console.log("Chart rendering complete.");
+		},
+		onSearch: function (event) {
+			debugger
+			var sQuery = event.getSource().getValue();
+			var oTable = this.byId("ReservationTable");
+			var oBinding = oTable.getBinding("items");
+
+			if (oBinding) {
+				var oFilter = new sap.ui.model.Filter([
+					new Filter("plotNo_plot_NO", FilterOperator.Contains, sQuery),
+					new Filter("vehicalNo", FilterOperator.Contains, sQuery),
+					new Filter("driverName", FilterOperator.Contains, sQuery)
+				], false);
+				oBinding.filter(oFilter);
+			}
+
 		}
 	});
 });

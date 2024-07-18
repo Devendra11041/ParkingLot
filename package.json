@@ -15,7 +15,7 @@
     "@cap-js/sqlite": "^1",
     "@sap/cds-dk": "^7",
     "@sap/eslint-plugin-cds": "^3",
-    "@sap/ux-specification": "^1.120.13",
+    "@sap/ux-specification": "^1.120.14",
     "eslint": "^9",
     "rimraf": "^5.0.5"
   },
@@ -24,6 +24,7 @@
     "watch-parkinglot": "cds watch --open parkinglot/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy ParkingLot --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-vendorpage": "cds watch --open vendorpage/webapp/index.html?sap-ui-xx-viewCache=false"
   }
 }
