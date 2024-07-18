@@ -135,7 +135,7 @@ sap.ui.define([
 			var trimmedPhone = phone.trim();
 
 			// Validate phone number
-			var phoneRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/;
+			var phoneRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 			if (!(phoneRegex.test(trimmedPhone))) {
 				MessageToast.show("Please enter a valid phone number");
 				return;
@@ -163,6 +163,46 @@ sap.ui.define([
 				// Assuming createData method sends a POST request
 				await this.createData(oModel, oPayload.VehicalDeatils, "/VehicalDeatils");
 				//await this.createData(oModel, oPayload.VehicalDeatils, "/History");
+
+
+
+				//   start SMS
+				const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
+				const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+
+				// debugger
+				const toNumber = `+91${phone}`
+				const fromNumber = '+13613109079';
+				const messageBody = `Hi ${driverName} a Slot number ${plotNo} is alloted to you vehicle number ${vehicalNo} \nKindly Move your vehicle to your allocated Parking lot. \nThank You,\nVishal Parking Management.`;
+
+				// Twilio API endpoint for sending messages
+				const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+
+				// Send POST request to Twilio API using jQuery.ajax
+				$.ajax({
+					url: url,
+					type: 'POST',
+					async: true,
+					headers: {
+						'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken)
+					},
+					data: {
+						To: toNumber,
+						From: fromNumber,
+						Body: messageBody
+					},
+					success: function (data) {
+						MessageToast.show('if number exists SMS will be sent!');
+					},
+					error: function (error) {
+						MessageToast.show('Failed to send SMS: ' + error);
+					}
+				});
+
+				// sms end
+
+
 				sap.m.MessageBox.information(
 					`Vehicel No ${vehicalNo} allocated to Slot No ${plotNo}`,
 					{
@@ -287,6 +327,44 @@ sap.ui.define([
 							await that.createData(oModel, oPayload.VehicalDeatils, "/History");
 
 							await that.deleteData(oModel, "/VehicalDeatils", vehicalNo);
+
+							//   start SMS
+							const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
+							const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+
+							// debugger
+							const toNumber = `+91${phone}`
+							const fromNumber = '+13613109079';
+							const messageBody = `Hi ${driverName},\n\nYour vehicle with registration number ${vehicalNo} was previously parked in Slot number ${plotNo}.Please remove your vehicle from the parking lot at your earliest convenience..\n\nPlease ignore this message if you have already removed your vehicle from the parking lot.\n\nThank you,\nVishal Parking Management.`;
+
+
+							// Twilio API endpoint for sending messages
+							const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+
+							// Send POST request to Twilio API using jQuery.ajax
+							$.ajax({
+								url: url,
+								type: 'POST',
+								async: true,
+								headers: {
+									'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken)
+								},
+								data: {
+									To: toNumber,
+									From: fromNumber,
+									Body: messageBody
+								},
+								success: function (data) {
+									MessageToast.show('if number exists SMS will be sent!');
+								},
+								error: function (error) {
+									MessageToast.show('Failed to send SMS: ' + error);
+								}
+							});
+
+							// sms end
+
 
 							const updatedParkingLot = {
 								available: true // Assuming false represents empty parking
