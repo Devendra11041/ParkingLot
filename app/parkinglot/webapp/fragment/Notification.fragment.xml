@@ -1,0 +1,61 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    class="sapUiBodyBackground sapContrastPlus sapContrast"
+>
+    <Popover
+        class="customPopoverContent"
+        placement="PreferredLeftOrFlip"
+    >
+        <customHeader>
+            <Bar class="notify">
+                <contentLeft>
+                    <Text text="Notifications..!" />
+                </contentLeft>
+                <contentRight>
+                    <!-- <Button
+                        id="cancelbtn"
+                        icon="sap-icon://sys-cancel"
+                        press="oncancelbtn"
+                        type="Reject"
+                    /> -->
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <NotificationList class="notify">
+            <layoutData>
+                <FlexItemData
+                    maxWidth="800px"
+                    maxHeight="100px"
+                />
+            </layoutData>
+            <NotificationListGroup
+                id="Notification1"
+                title="Booking request"
+                showCloseButton="false"
+                close="onItemClose"
+                items=""
+                press="onListItemPress"
+            >
+                <NotificationListItem
+                    title="Vender Name :-"
+                    description="Hii ! Book the Slot For this date and time {vehicalNo} "
+                    highlightText=""
+                    showCloseButton="true"
+                    datetime=""
+                    unread="true"
+                    priority="Low"
+                    close="onItemClose1"
+                    press=".onListItemPress"
+                    authorInitials=""
+                    authorAvatarColor="Random"
+                    class="notify"
+                />
+            </NotificationListGroup>
+        </NotificationList>
+    </Popover>
+</core:FragmentDefinition>

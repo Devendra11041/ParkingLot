@@ -84,12 +84,21 @@
                     type="Transparent"
                     text="Settings"
                 />
+
                 <Button
                     id="_IDGenButton1"
                     icon="sap-icon://bell"
                     type="Transparent"
                     tooltip="Notification"
+                    press="OnpressNotify"
                 >
+                    <customData>
+                        <BadgeCustomData
+                            id="idnotification7"
+                            value="{/Reservation/$count}"
+                            visible="true"
+                        />
+                    </customData>
                     <layoutData>
                         <OverflowToolbarLayoutData
                             id="_IDGenOverflowToolbarLayoutData8"
@@ -140,7 +149,7 @@
                     <items>
                         <IconTabFilter
                             id="_IDGenIconTabFilter1"
-                            items="{items}"
+                            items="{item}"
                             text="{title}"
                             key="{key}"
                             icon="{icon}"
@@ -578,7 +587,7 @@
                                                 id="parkingLotSelect"
                                                 required="true"
                                                 editable="true"
-                                                items="{path: '/PlotNOs', filters: [{path: 'available', operator: 'EQ', value1:true }]}"
+                                                items="{path: '/PlotNOs', filters: [{path: 'available', operator: 'EQ', value1:true }], templateShareable: true}"
                                             >
                                                 <core:Item
                                                     id="_IDGenItem3"

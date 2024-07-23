@@ -117,3 +117,11 @@ color:chocolate
     font-weight: bolder;
     color: blue;
 }
+
+.customPopoverContent {
+    width: 400px;
+    height: 200px;
+    overflow: auto; /* Optional: Add this to handle overflow content */
+   
+}
+ 

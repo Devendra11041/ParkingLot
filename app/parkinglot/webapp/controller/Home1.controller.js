@@ -363,7 +363,7 @@ sap.ui.define([
 								}
 							});
 
-							// sms end
+							// sms endR
 
 
 							const updatedParkingLot = {
@@ -685,13 +685,13 @@ sap.ui.define([
 							{
 								available: true,
 								Count: availableCount,
-								available: "Empty Lots",
+								available: `Empty Lots - ${availableCount}`,
 
 							},
 							{
 								available: false,
 								Count: occupiedCount,
-								available: "Not Empty Lots"
+								available: `Not Empty Lots -${occupiedCount}`
 							}
 						]
 					};
@@ -705,6 +705,7 @@ sap.ui.define([
 			});
 		},
 		_setHistoryModel: function () {
+			debugger
 			var oModel = this.getOwnerComponent().getModel("ModelV2");
 			var that = this;
 
@@ -726,6 +727,7 @@ sap.ui.define([
 		},
 
 		_processHistoryData: function (aItems) {
+			debugger
 			var oData = {};
 
 			aItems.forEach(function (item) {
@@ -774,6 +776,25 @@ sap.ui.define([
 				oBinding.filter(oFilter);
 			}
 
+		},
+		//Notification fragment 
+		OnpressNotify: function (oEvent) {
+			debugger
+			var oButton = oEvent.getSource(),
+				oView = this.getView();
+
+			// create popover
+			if (!this._pPopover) {
+				debugger
+				this._pPopover = this.loadFragment("Notification").then(function (oPopover) {
+					oView.addDependent(oPopover);
+					oPopover.bindElement("");
+					return oPopover;
+				});
+			}
+			this._pPopover.then(function (oPopover) {
+				oPopover.openBy(oButton);
+			});
 		}
 	});
 });
