@@ -167,8 +167,8 @@ sap.ui.define([
 
 
 				//   start SMS
-				const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
-				const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+				const accountSid = '';
+				const authToken = '';
 
 				// debugger
 				const toNumber = `+91${phone}`
@@ -329,8 +329,8 @@ sap.ui.define([
 							await that.deleteData(oModel, "/VehicalDeatils", vehicalNo);
 
 							//   start SMS
-							const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
-							const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+							const accountSid = '';
+							const authToken = '';
 
 							// debugger
 							const toNumber = `+91${phone}`
