@@ -99,12 +99,12 @@
                             visible="true"
                         />
                     </customData>
-                    <layoutData>
+                    <!-- <layoutData>
                         <OverflowToolbarLayoutData
                             id="_IDGenOverflowToolbarLayoutData8"
                             priority="NeverOverflow"
                         />
-                    </layoutData>
+                    </layoutData> -->
                 </Button>
                 <tnt:ToolHeaderUtilitySeparator
                     id="_IDGenToolHeaderUtilitySeparator1"
@@ -148,8 +148,8 @@
                     </layoutData>
                     <items>
                         <IconTabFilter
-                            id="_IDGenIconTabFilter1"
-                            items="{item}"
+                            id="Idiconbar"
+                            items="{items}"
                             text="{title}"
                             key="{key}"
                             icon="{icon}"
@@ -268,12 +268,23 @@
                                             text="Vehicle Type"
                                             class="bold-red-label"
                                         />
-                                        <Input
-                                            id="idvehiceltype"
-                                            placeholder="Enter vehicel type"
+                                        <Select
+                                            id="idselectvt"
                                             width="100%"
-                                            value="{localModel>/VehicalDeatils/vehicalType}"
-                                        />
+                                        >
+                                            <items>
+                                                <core:Item
+                                                    id="idcore1"
+                                                    key="inward"
+                                                    text="inward"
+                                                />
+                                                <core:Item
+                                                    id="idcore2"
+                                                    key="outward"
+                                                    text="outward"
+                                                />
+                                            </items>
+                                        </Select>
                                     </VBox>
 
                                     <VBox
@@ -695,85 +706,102 @@
                             </items>
                         </Table>
                     </ScrollContainer>
+
                     <ScrollContainer
                         id="page5"
                         horizontal="false"
                         vertical="true"
                         height="100%"
-                        class="sapUiContentPaddingreserve"
+                        class="classpage5"
                     >
                         <content>
-                            <VBox
-                                id="idreservevboxt"
+                            <FlexBox
                                 alignItems="Center"
-                                justifyContent="Center"
-                                class="classsimpleform"
+                                justifyContent="End"
+                                height="100%"
+                                width="100%"
                             >
-                                <f:SimpleForm
-                                    id="reservationForm"
-                                    layout="ResponsiveGridLayout"
-                                    editable="true"
-                                    columnsM="2"
-                                    columnsL="3"
-                                    columnsXL="4"
-                                    class="SimpleForm"
+                                <VBox
+                                    id="idreservevboxt"
+                                    alignItems="Center"
+                                    justifyContent="Center"
+                                    class="classsimpleform"
                                 >
-                                    <Title
-                                        id="idtitlereserva"
-                                        text="LOT RESERVATION"
-                                        class="Reserveheading"
-                                    />
-                                    <VBox id="ReserveVbox">
-                                        <Label
-                                            id="idVehicleNumberLabel"
-                                            text="Vehicle No"
-                                            class="Bold"
+                                    <f:SimpleForm
+                                        id="reservationForm"
+                                        layout="ResponsiveGridLayout"
+                                        editable="true"
+                                        columnsM="2"
+                                        columnsL="3"
+                                        columnsXL="4"
+                                        class="SimpleForm"
+                                    >
+                                        <Title
+                                            id="idtitlereserva"
+                                            text="LOT RESERVATION"
+                                            class="Reserveheading"
                                         />
-                                        <Input
-                                            id="InputVehicleno"
-                                            value="{}"
-                                            placeholder="Enter Vehicle Number"
-                                        />
-                                        <Label
-                                            id="idDriverNameLabel"
-                                            text="Driver Name"
-                                            class="Bold"
-                                        />
-                                        <Input
-                                            id="InputDriverName"
-                                            value="{}"
-                                            placeholder="Enter Driver Name"
-                                        />
-                                        <Label
-                                            id="idphonenumberLabel"
-                                            text="Phone Number"
-                                            class="Bold"
-                                        />
-                                        <Input
-                                            id="InputPhonenumber"
-                                            value="{}"
-                                            placeholder="Enter Phone number"
-                                        />
-                                        <Label
-                                            id="idVehicletypeLabel"
-                                            text="Vehicle Type"
-                                            class="Bold"
-                                        />
-                                        <Input
-                                            id="InputVehicletype"
-                                            placeholder="Enter Vehicle Type"
-                                            value="{}"
-                                        />
-                                        <Label
-                                            id="idParkinglotLabel"
-                                            text="Parking lot"
-                                            class="Bold"
-                                        />
-                                        <ComboBox
-                                            id="idcombox1"
-                                            placeholder="select your lot"
-                                            value="{newmodel>/plotNo_plot_NO}"
-                                            items="{
+                                        <VBox id="ReserveVbox">
+                                            <Label
+                                                id="idVehicleNumberLabel"
+                                                text="Vehicle No"
+                                                class="Bold"
+                                            />
+                                            <Input
+                                                id="InputVehicleno"
+                                                value="{}"
+                                                placeholder="Enter Vehicle Number"
+                                            />
+                                            <Label
+                                                id="idDriverNameLabel"
+                                                text="Driver Name"
+                                                class="Bold"
+                                            />
+                                            <Input
+                                                id="InputDriverName"
+                                                value="{}"
+                                                placeholder="Enter Driver Name"
+                                            />
+                                            <Label
+                                                id="idphonenumberLabel"
+                                                text="Phone Number"
+                                                class="Bold"
+                                            />
+                                            <Input
+                                                id="InputPhonenumber"
+                                                value="{}"
+                                                placeholder="Enter Phone number"
+                                            />
+                                            <Label
+                                                id="idVehicletypeLabel"
+                                                text="Vehicle Type"
+                                                class="Bold"
+                                            />
+                                            <ComboBox
+                                                id="InputVehicletype"
+                                                placeholder="Select Vehicle Type"
+                                                selectedKey="{localModel>/VehicalDeatils/vehicalType}"
+                                                items="{
+                                                path: 'vehicleTypeModel>/vehicleTypes',
+                                                  templateShareable: false
+                                                 }"
+                                            >
+                                                <core:Item
+                                                    id="idcoreitemstfg"
+                                                    key="{vehicleTypeModel>key}"
+                                                    text="{vehicleTypeModel>text}"
+                                                />
+                                            </ComboBox>
+                                            <Label
+                                                id="idParkinglotLabel"
+                                                text="Parking lot"
+                                                class="Bold"
+                                            />
+                                            <ComboBox
+                                                id="idcombox1"
+                                                placeholder="select your lot"
+                                                value="{newmodel>/plotNo_plot_NO}"
+                                                items="{
                                             path: '/PlotNOs',
                                              sorter: {
                                              path: 'plot_NO'
@@ -784,52 +812,54 @@
                                                 value1: true
                                                }]
                                              }"
-                                        >
-                                            <core:Item
-                                                id="idcoreitems"
-                                                text="{plot_NO}"
+                                            >
+                                                <core:Item
+                                                    id="idcoreitems"
+                                                    text="{plot_NO}"
+                                                />
+                                            </ComboBox>
+                                            <Label
+                                                id="idtypedate"
+                                                text="Date"
+                                                class="Bold"
                                             />
-                                        </ComboBox>
-                                        <Label
-                                            id="idtypedate"
-                                            text="Date"
-                                            class="Bold"
-                                        />
-                                        <DateTimePicker
-                                            id="idinputdatepicker"
-                                            value="{path: '/dtValue', type: 'sap.ui.model.type.DateTime'}"
-                                            valueFormat="yyyy-MM-ddTHH:mm:ss"
-                                            displayFormat="dd.MM.yyyy HH:mm"
-                                            dateValue="{/today}"
-                                            placeholder="Select Date and Time"
-                                        />
+                                            <DateTimePicker
+                                                id="idinputdatepicker"
+                                                value="{path: '/dtValue', type: 'sap.ui.model.type.DateTime'}"
+                                                valueFormat="yyyy-MM-ddTHH:mm:ss"
+                                                displayFormat="dd.MM.yyyy HH:mm"
+                                                dateValue="{/today}"
+                                                placeholder="Select Date and Time"
+                                            />
 
-                                        <HBox
-                                            id="_IDReserveHBox1"
-                                            alignItems="Center"
-                                            class="classHbox"
-                                            justifyContent="Start"
-                                        >
-                                            <Button
-                                                id="idbuttonreserve"
-                                                text="Reserve"
-                                                press="onReservePressbtn"
-                                                type="Success"
-                                                class="classButton"
-                                            />
-                                            <Button
-                                                id="idbuttonreservew"
-                                                text="clear"
-                                                press="onReservePressbtnclear"
-                                                type="Default"
-                                                class="classButton1"
-                                            />
-                                        </HBox>
-                                    </VBox>
-                                </f:SimpleForm>
-                            </VBox>
+                                            <HBox
+                                                id="_IDReserveHBox1"
+                                                alignItems="Center"
+                                                class="classHbox"
+                                                justifyContent="Start"
+                                            >
+                                                <Button
+                                                    id="idbuttonreserve"
+                                                    text="Reserve"
+                                                    press="onReservePressbtn"
+                                                    type="Success"
+                                                    class="classButton"
+                                                />
+                                                <Button
+                                                    id="idbuttonreservew"
+                                                    text="clear"
+                                                    press="onReservePressbtnclear"
+                                                    type="Default"
+                                                    class="classButton1"
+                                                />
+                                            </HBox>
+                                        </VBox>
+                                    </f:SimpleForm>
+                                </VBox>
+                            </FlexBox>
                         </content>
                     </ScrollContainer>
+
                     <ScrollContainer
                         id="page6"
                         horizontal="false"
@@ -955,12 +985,12 @@
                                                         <viz.data:measures>
                                                             <viz.data:MeasureDefinition
                                                                 id="_IDGenMeasureDefinition2"
-                                                                name="Inward Count"
+                                                                name="Inward Vehicle"
                                                                 value="{HistoryModel>inwardCount}"
                                                             />
                                                             <viz.data:MeasureDefinition
                                                                 id="_IDGenMeasureDefinition3"
-                                                                name="Outward Count"
+                                                                name="Outward Vehicle"
                                                                 value="{HistoryModel>outwardCount}"
                                                             />
                                                         </viz.data:measures>
@@ -971,13 +1001,13 @@
                                                         id="_IDGenFeedItem3"
                                                         uid="valueAxis"
                                                         type="Measure"
-                                                        values="Inward Count"
+                                                        values="Inward Vehicle"
                                                     />
                                                     <viz.feeds:FeedItem
                                                         id="_IDGenFeedItem4"
                                                         uid="valueAxis"
                                                         type="Measure"
-                                                        values="Outward Count"
+                                                        values="Outward Vehicle"
                                                     />
                                                     <viz.feeds:FeedItem
                                                         id="_IDGenFeedItem7"

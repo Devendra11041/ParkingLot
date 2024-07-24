@@ -26,8 +26,6 @@
                 columnsL="3"
                 columnsXL="4"
                 class="SimpleForm"
-                
-
             >
                 <Title
                     id="idtitlereserva"
@@ -42,7 +40,6 @@
                     />
                     <Input
                         id="InputVehicleno"
-                        value="{}"
                         placeholder="Enter Vehicle Number"
                     />
                     <Label
@@ -52,7 +49,6 @@
                     />
                     <Input
                         id="InputDriverName"
-                        value="{}"
                         placeholder="Enter Driver Name"
                     />
                     <Label
@@ -62,7 +58,6 @@
                     />
                     <Input
                         id="InputPhonenumber"
-                        value="{}"
                         placeholder="Enter Phone number"
                     />
                     <Label
@@ -73,7 +68,6 @@
                     <Input
                         id="InputVehicletype"
                         placeholder="Enter Vehicle Type"
-                        value="{}"
                     />
                     <Label
                         id="idParkinglotLabel"
@@ -114,29 +108,29 @@
                         dateValue="{/today}"
                         placeholder="Select Date and Time"
                     />
-
-                    <HBox
-                        id="_IDReserveHBox1"
-                        alignItems="Center"
-                        class="classHbox"
-                        justifyContent="Start"
-                    >
-                        <Button
-                            id="idbuttonreserve"
-                            text="Reserve"
-                            press="onReservePressbtn"
-                            type="Success"
-                            class="classButton"
-                        />
-                        <Button
-                            id="idbuttonreservew"
-                            text="clear"
-                            press="onReservePressbtnclear"
-                            type="Default"
-                            class="classButton1"
-                        />
-                    </HBox>
-                </VBox>
+                    
+                        <HBox
+                            id="_IDReserveHBox1"
+                            alignItems="Center"
+                            class="classHbox"
+                            justifyContent="Start"
+                        >
+                            <Button
+                                id="idbuttonreserve"
+                                text="Reserve"
+                                press="onReservePressbtn"
+                                type="Success"
+                                class="classButton"
+                            />
+                            <Button
+                                id="idbuttonreservew"
+                                text="clear"
+                                press="onReservePressbtnclear_"
+                                type="Default"
+                                class="classclearButton"
+                            />
+                        </HBox>
+                    </VBox>  
             </f:SimpleForm>
         </VBox>
     </Page>

@@ -7,50 +7,50 @@
     class="sapUiBodyBackground sapContrastPlus sapContrast"
 >
     <Popover
+        id="idnotification_idg"
         class="customPopoverContent"
         placement="PreferredLeftOrFlip"
     >
         <customHeader>
-            <Bar class="notify">
+            <Bar id="ejudisjhd" class="notify">
                 <contentLeft>
-                    <Text text="Notifications..!" />
+                    <Text
+                        id="idnotification_idh"
+                        text="Notifications..!"
+                    />
                 </contentLeft>
-                <contentRight>
-                    <!-- <Button
-                        id="cancelbtn"
-                        icon="sap-icon://sys-cancel"
-                        press="oncancelbtn"
-                        type="Reject"
-                    /> -->
-                </contentRight>
             </Bar>
         </customHeader>
 
-        <NotificationList class="notify">
+        <NotificationList
+            id="idnotification_ido"
+            class="notify"
+            
+        >
             <layoutData>
                 <FlexItemData
+                    id="idnotification_idf"
                     maxWidth="800px"
                     maxHeight="100px"
                 />
             </layoutData>
             <NotificationListGroup
-                id="Notification1"
+                id="idnotification_idd"
                 title="Booking request"
                 showCloseButton="false"
                 close="onItemClose"
-                items=""
+                items="{NotificationModel>/Notifications}"
                 press="onListItemPress"
             >
                 <NotificationListItem
-                    title="Vender Name :-"
-                    description="Hii ! Book the Slot For this date and time {vehicalNo} "
-                    highlightText=""
-                    showCloseButton="true"
-                    datetime=""
-                    unread="true"
-                    priority="Low"
+                    id="idnotification_ide"
+                    title="{NotificationModel>title}"
+                    description="{NotificationModel>description}"
+                    datetime="{NotificationModel>datetime}"
+                    unread="{NotificationModel>unread}"
+                    priority="{NotificationModel>priority}"
                     close="onItemClose1"
-                    press=".onListItemPress"
+                    press="onListItemPress"
                     authorInitials=""
                     authorAvatarColor="Random"
                     class="notify"

@@ -7,9 +7,10 @@ sap.ui.define([
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/format/DateFormat",
+	"sap/ui/model/odata/v2/ODataModel",
 	"sap/m/MessageBox"
 
-], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, FilterOperator, MessageBox, DateFormat) {
+], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, ODataModel, FilterOperator, MessageBox, DateFormat) {
 	"use strict";
 
 	return Controller.extend("com.app.parkinglot.controller.Home1", {
@@ -17,6 +18,11 @@ sap.ui.define([
 		onInit: function () {
 			var oModel = new JSONModel(sap.ui.require.toUrl("com/app/parkinglot/model/data.json"));
 			this.getView().setModel(oModel);
+
+			var oNotificationModel = new sap.ui.model.json.JSONModel({
+				Notifications: []
+			});
+			this.getView().setModel(oNotificationModel, "NotificationModel");
 
 			this._setParkingLotModel();
 			this._setHistoryModel();
@@ -33,6 +39,14 @@ sap.ui.define([
 
 			// Set display format to show only date
 			oDateTimePicker.setDisplayFormat("yyyy-MM-dd");
+
+			const oVehicleTypeModel = new sap.ui.model.json.JSONModel({
+				vehicleTypes: [
+					{ key: "inward", text: "inward" },
+					{ key: "outward", text: "outward" }
+				]
+			});
+			this.getView().setModel(oVehicleTypeModel, "vehicleTypeModel");
 
 
 
@@ -117,11 +131,14 @@ sap.ui.define([
 
 		//Assign the vehicel to the parking lot
 		onAssignPress: async function () {
+			debugger
 			const oPayload = this.getView().byId("page1").getModel("localModel").getProperty("/");
-			const { driverName, phone, vehicalNo, vehicalType } = this.getView().byId("page1").getModel("localModel").getProperty("/").VehicalDeatils;
+			const { driverName, phone, vehicalNo } = this.getView().byId("page1").getModel("localModel").getProperty("/").VehicalDeatils;
+			const vehicalType = this.getView().byId("idselectvt").getSelectedKey();
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2"); // Assuming "ModelV2" is your ODataModel
 			const plotNo = this.getView().byId("productInput").getValue();
 			oPayload.VehicalDeatils.plotNo_plot_NO = plotNo;
+			oPayload.VehicalDeatils.vehicalType = vehicalType;
 
 			//Assingning the current time to the vehicel data.
 			const Intime = new Date;
@@ -140,7 +157,7 @@ sap.ui.define([
 				MessageToast.show("Please enter a valid phone number");
 				return;
 			}
-
+            debugger
 			var oVehicleExist = await this.checkVehicleNo(oModel, oPayload.VehicalDeatils.vehicalNo)
 			if (oVehicleExist) {
 				MessageToast.show("Vehicle already exsist")
@@ -167,8 +184,8 @@ sap.ui.define([
 
 
 				//   start SMS
-				const accountSid = '';
-				const authToken = '';
+				const accountSid = ""
+				const authToken = ""
 
 				// debugger
 				const toNumber = `+91${phone}`
@@ -176,7 +193,7 @@ sap.ui.define([
 				const messageBody = `Hi ${driverName} a Slot number ${plotNo} is alloted to you vehicle number ${vehicalNo} \nKindly Move your vehicle to your allocated Parking lot. \nThank You,\nVishal Parking Management.`;
 
 				// Twilio API endpoint for sending messages
-				const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+				const url = ""
 
 
 				// Send POST request to Twilio API using jQuery.ajax
@@ -202,6 +219,32 @@ sap.ui.define([
 
 				// sms end
 
+				// Function to make an announcement
+				function makeAnnouncement(message, lang = 'en-US') {
+					// Check if the browser supports the Web Speech API
+					if ('speechSynthesis' in window) {
+						// Create a new instance of SpeechSynthesisUtterance
+						var utterance = new SpeechSynthesisUtterance(message);
+
+						// Set properties (optional)
+						utterance.pitch = 1; // Range between 0 (lowest) and 2 (highest)
+						utterance.rate = 0.75;  // Range between 0.1 (lowest) and 10 (highest)
+						utterance.volume = 1; // Range between 0 (lowest) and 1 (highest)
+						utterance.lang = lang; // Set the language
+
+						// Speak the utterance
+						debugger
+						window.speechSynthesis.speak(utterance);
+					} else {
+						console.log('Sorry, your browser does not support the Web Speech API.');
+					}
+				}
+
+				// Example usage
+				//makeAnnouncement(`कृपया ध्यान दें। वाहन नंबर ${vehicalNo} को स्लॉट नंबर ${plotNo} द्वारा आवंटित किया गया है।`, 'hi-IN');
+				//makeAnnouncement(`దయచేసి వినండి. వాహనం నంబర్ ${vehicalNo} కు స్లాట్ నంబర్ ${plotNo} కేటాయించబడింది.`, 'te-IN');
+
+
 
 				sap.m.MessageBox.information(
 					`Vehicel No ${vehicalNo} allocated to Slot No ${plotNo}`,
@@ -226,6 +269,7 @@ sap.ui.define([
 		},
 		//validation for phone no checking
 		checkPhoneExists: async function (oModel, trimmedPhone) {
+			
 			return new Promise((resolve, reject) => {
 				oModel.read("/VehicalDeatils", {
 					filters: [
@@ -245,20 +289,18 @@ sap.ui.define([
 			return new Promise((resolve, reject) => {
 				oModel.read("/VehicalDeatils", {
 					filters: [
-						new Filter("vehicalNo", FilterOperator.EQ, sVehicalNo),
-
+						new sap.ui.model.Filter("vehicalNo", sap.ui.model.FilterOperator.EQ, sVehicalNo)
 					],
 					success: function (oData) {
 						resolve(oData.results.length > 0);
 					},
 					error: function () {
-						reject(
-							"An error occurred while checking username existence."
-						);
+						reject("An error occurred while checking vehicle number existence.");
 					}
-				})
-			})
+				});
+			});
 		},
+		
 		//validation for plotAvailability checking
 		checkParkingLotReservation: async function (oModel, plotNo) {
 			return new Promise((resolve, reject) => {
@@ -329,8 +371,8 @@ sap.ui.define([
 							await that.deleteData(oModel, "/VehicalDeatils", vehicalNo);
 
 							//   start SMS
-							const accountSid = '';
-							const authToken = '';
+							const accountSid = ""
+							const authToken = ""
 
 							// debugger
 							const toNumber = `+91${phone}`
@@ -339,7 +381,7 @@ sap.ui.define([
 
 
 							// Twilio API endpoint for sending messages
-							const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+							const url = ""
 
 
 							// Send POST request to Twilio API using jQuery.ajax
@@ -423,45 +465,75 @@ sap.ui.define([
 		},
 		//vehicel submission details are alredy in 
 		vehiclesubmit: function (oEvent) {
-			debugger
+			debugger;
 			const oLocalModel = this.getView().byId("page1").getModel("localModel");
 			const oModel = this.getView().byId("pageContainer").getModel("ModelV2");
 			const svehicalNo = oEvent.getParameter("value");
 
+			// Function to set vehicle details in the local model
+			const setVehicleDetails = (oVehicle) => {
+				oLocalModel.setProperty("/VehicalDeatils/vehicalNo", oVehicle.vehicalNo);
+				oLocalModel.setProperty("/VehicalDeatils/driverName", oVehicle.driverName);
+				oLocalModel.setProperty("/VehicalDeatils/phone", oVehicle.phone);
+				oLocalModel.setProperty("/VehicalDeatils/vehicalType", oVehicle.vehicalType);
+				oLocalModel.setProperty("/VehicalDeatils/assignedDate", oVehicle.assignedDate);
+				this.oView.byId("productInput").setValue(oVehicle.plotNo_plot_NO)
+			};
+
+			// Function to clear vehicle details in the local model
+			const clearVehicleDetails = () => {
+				oLocalModel.setProperty("/VehicalDeatils/vehicalNo", "");
+				oLocalModel.setProperty("/VehicalDeatils/driverName", "");
+				oLocalModel.setProperty("/VehicalDeatils/phone", "");
+				oLocalModel.setProperty("/VehicalDeatils/vehicalType", "");
+				oLocalModel.setProperty("/VehicalDeatils/assignedDate", "");
+				oLocalModel.setProperty("/VehicalDeatils/plotNo_plot_NO", "");
+			};
+
+			// Read from VehicalDeatils entity
 			oModel.read("/VehicalDeatils", {
-				filters: [
-					new Filter("vehicalNo", FilterOperator.EQ, svehicalNo)
-				],
+				filters: [new Filter("vehicalNo", sap.ui.model.FilterOperator.EQ, svehicalNo)],
 				success: function (oData) {
 					var aVehicles = oData.results;
 					if (aVehicles.length > 0) {
-						// Assuming there's only one record with unique vehicalNo
+						// Vehicle found in VehicalDeatils
 						var oVehicle = aVehicles[0];
-						// Set other fields based on the found vehicle
-						oLocalModel.setProperty("/VehicalDeatils/vehicalNo", oVehicle.vehicalNo);
-						oLocalModel.setProperty("/VehicalDeatils/driverName", oVehicle.driverName);
-						oLocalModel.setProperty("/VehicalDeatils/phone", oVehicle.phone);
-						oLocalModel.setProperty("/VehicalDeatils/vehicalType", oVehicle.vehicalType);
-						oLocalModel.setProperty("/VehicalDeatils/assignedDate", oVehicle.assignedDate);
-						this.oView.byId("productInput").setValue(oVehicle.plotNo_plot_NO)
-						// Set other fields as needed
+						setVehicleDetails(oVehicle);
 					} else {
-						// Handle case where vehicle number was not found
-						sap.m.MessageToast.show("Vehicle number not found.");
-						// Optionally clear other fields
-						oLocalModel.setProperty("/VehicalDeatils/vehicalNo", "");
-						oLocalModel.setProperty("/VehicalDeatils/driverName", "");
-						oLocalModel.setProperty("/VehicalDeatils/phone", "");
-						oLocalModel.setProperty("/VehicalDeatils/vehicalType", "");
-						oLocalModel.setProperty("/VehicalDeatils/assignedDate", "");
-						// Clear other fields as needed
+						// If not found in VehicalDeatils, check in Reservation
+						oModel.read("/Reservation", {
+							filters: [new Filter("vehicalNo", sap.ui.model.FilterOperator.EQ, svehicalNo)],
+							success: function (oData) {
+								var aReservations = oData.results;
+								if (aReservations.length > 0) {
+									// Vehicle found in Reservation
+									var oReservation = aReservations[0];
+									// Assuming Reservation entity has similar fields
+									var oVehicleDetails = {
+										vehicalNo: oReservation.vehicalNo,
+										driverName: oReservation.driverName,
+										phone: oReservation.phone,
+										vehicalType: oReservation.vehicalType,
+										assignedDate: oReservation.Expectedtime, // Adjust this field if necessary
+										plotNo_plot_NO: oReservation.plotNo_plot_NO
+									};
+									setVehicleDetails(oVehicleDetails);
+								} else {
+									// Vehicle not found in both entities
+									sap.m.MessageToast.show("Vehicle number not found.");
+									clearVehicleDetails();
+								}
+							}.bind(this),
+							error: function (oError) {
+								sap.m.MessageToast.show("Error fetching reservation details: " + oError.message);
+							}
+						});
 					}
 				}.bind(this),
 				error: function (oError) {
 					sap.m.MessageToast.show("Error fetching vehicle details: " + oError.message);
 				}
-
-			})
+			});
 		},
 		//Edit function
 		onEditpress: function (oEvent) {
@@ -527,6 +599,7 @@ sap.ui.define([
 		},
 		//Parking lot Reservations
 		onReservePressbtn: async function () {
+			debugger
 			var oView = this.getView();
 			const oModel = oView.byId("pageContainer").getModel("ModelV2");
 
@@ -534,7 +607,7 @@ sap.ui.define([
 			var sVehicleNo = oView.byId("InputVehicleno").getValue();
 			var sDriverName = oView.byId("InputDriverName").getValue();
 			var sPhoneNo = oView.byId("InputPhonenumber").getValue();
-			var sVehicleType = oView.byId("InputVehicletype").getValue();
+			var sVehicleType = oView.byId("InputVehicletype").getSelectedKey();
 			var sParkingLot = oView.byId("idcombox1").getValue();
 			var oDateTimePicker = oView.byId("idinputdatepicker");
 			var oSelectedDateTime = oDateTimePicker.getDateValue();
@@ -548,12 +621,6 @@ sap.ui.define([
 			// Validation for Vehicle Number
 			if (!sVehicleNo || !sVehicleNo.match(/^[\w\d]{1,10}$/)) {
 				sap.m.MessageBox.error("Please enter a valid vehicle number (alphanumeric, up to 10 characters).");
-				return;
-			}
-
-			// Validation for Vehicle Type
-			if (sVehicleType !== "inward" && sVehicleType !== "outward") {
-				sap.m.MessageBox.error("Please enter either 'inward' or 'outward' for vehicle type.");
 				return;
 			}
 
@@ -581,6 +648,7 @@ sap.ui.define([
 			try {
 				await this.createData(oModel, oPayload, "/Reservation");
 				sap.m.MessageBox.success("Parking lot reserved  successfully");
+				this.addNotification(sDriverName, sVehicleNo, sVehicleType, sParkingLot, oSelectedDateTime);
 			} catch (error) {
 				sap.m.MessageBox.error("Failed to create reservation. Please try again.");
 				console.error("Error creating reservation:", error);
@@ -590,10 +658,11 @@ sap.ui.define([
 		// Function to check if vehicle number exists in backend
 		// Function to check if vehicle number exists in backend
 		checkVehicleExists: async function (oModel, sVehicleNo) {
+			debugger
 			return new Promise((resolve, reject) => {
-				oModel.read("/VehicalDeatils", {
+				oModel.read("/Reservation", {
 					filters: [
-						new Filter("vehicalNo", FilterOperator.EQ, sVehicleNo)
+						new Filter("vehicalNo", sap.ui.model.FilterOperator.EQ, sVehicleNo)
 					],
 					success: function (oData) {
 						resolve(oData.results.length > 0);
@@ -604,6 +673,31 @@ sap.ui.define([
 				});
 			});
 		},
+		addNotification: function (sDriverName, sVehicleNo, sVehicleType, sParkingLot, oSelectedDateTime) {
+			var oNotificationModel = this.getView().getModel("NotificationModel");
+			var aNotifications = oNotificationModel.getData().Notifications;
+
+			var oNewNotification = {
+				title: "Booking request",
+				description: `Driver Name: ${sDriverName}, Vehicle No: ${sVehicleNo}, Vehicle Type: ${sVehicleType}, Parking Lot: ${sParkingLot}, Expected Time: ${oSelectedDateTime}`,
+				datetime: new Date().toISOString(),
+				priority: "Low",
+				unread: true
+			};
+
+			var bExists = aNotifications.some(function (notification) {
+				return notification.description === oNewNotification.description && notification.datetime === oNewNotification.datetime;
+			});
+
+			// Add new notification if it doesn't exist
+			if (!bExists) {
+				aNotifications.push(oNewNotification);
+			}
+
+			// Update the model
+			oNotificationModel.setProperty("/Notifications", aNotifications);
+		},
+		//
 		onReservePressbtnclear: function () {
 			var oView = this.getView();
 			oView.byId("InputVehicleno").setValue("");
@@ -661,6 +755,42 @@ sap.ui.define([
 						}
 
 					})
+					//   start SMS
+					const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
+					const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+
+					// debugger
+					const toNumber = `+91${oSelectedRow.phone}`
+					const fromNumber = '+13613109079';
+					const messageBody = `Hi ${oSelectedRow.driverName},\n\nYour vehicle with registration number ${oSelectedRow.vehicalNo} was previously parked in Slot number ${oSelectedRow.plotNo_plot_NO}.Please remove your vehicle from the parking lot at your earliest convenience..\n\nPlease ignore this message if you have already removed your vehicle from the parking lot.\n\nThank you,\nVishal Parking Management.`;
+
+
+					// Twilio API endpoint for sending messages
+					const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+
+					// Send POST request to Twilio API using jQuery.ajax
+					$.ajax({
+						url: url,
+						type: 'POST',
+						async: true,
+						headers: {
+							'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken)
+						},
+						data: {
+							To: toNumber,
+							From: fromNumber,
+							Body: messageBody
+						},
+						success: function (data) {
+							MessageToast.show('if number exists SMS will be sent!');
+						},
+						error: function (error) {
+							MessageToast.show('Failed to send SMS: ' + error);
+						}
+					});
+
+					// sms end
 
 				},
 				error: function (oError) {
@@ -754,9 +884,20 @@ sap.ui.define([
 		},
 
 		onSelectData: function (oEvent) {
-			var oSelectedData = oEvent.getParameter("data")[0].data;
-			sap.m.MessageToast.show("Selected Date: " + oSelectedData.date + "\nInward Count: " + oSelectedData.inwardCount + "\nOutward Count: " + oSelectedData.outwardCount);
+			var aData = oEvent.getParameter("data");
+			if (aData && aData.length > 0) {
+				var oSelectedData = aData[0].data;
+				sap.m.MessageToast.show(
+					"Selected Date: " + oSelectedData.date +
+					"\nInward Count: " + oSelectedData.inwardCount +
+					"\nOutward Count: " + oSelectedData.outwardCount
+				);
+			} else {
+				console.error("No data selected or data structure mismatch.");
+			}
 		},
+
+
 
 		handleRenderComplete: function (oEvent) {
 			console.log("Chart rendering complete.");
@@ -779,22 +920,24 @@ sap.ui.define([
 		},
 		//Notification fragment 
 		OnpressNotify: function (oEvent) {
-			debugger
 			var oButton = oEvent.getSource(),
 				oView = this.getView();
 
-			// create popover
+			// Create popover if not already created
 			if (!this._pPopover) {
-				debugger
 				this._pPopover = this.loadFragment("Notification").then(function (oPopover) {
 					oView.addDependent(oPopover);
-					oPopover.bindElement("");
+					oPopover.bindElement("/Reservation");
 					return oPopover;
 				});
 			}
+
+			// Open popover
 			this._pPopover.then(function (oPopover) {
 				oPopover.openBy(oButton);
+				oDataModel.refresh();
 			});
-		}
+		},
+
 	});
 });

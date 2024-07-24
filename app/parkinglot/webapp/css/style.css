@@ -6,7 +6,7 @@
 .bold-red-label {
     font-weight: bold;
     /* color: rgb(40, 225, 11); */
-    color:rgb(243, 13, 13); /* White text */
+    color:rgb(24, 13, 243); /* White text */
     padding: 5px 5px; /* Padding around text */
     border: none; /* No border */
     cursor: pointer; /* Pointer cursor on hover */
@@ -23,8 +23,11 @@
 
 /* Back Ground Color for Pages */
 .classpage1{
-    background-color: rgb(235, 246, 233);
-}
+    background-image: url("https://as1.ftcdn.net/v2/jpg/07/15/79/22/1000_F_715792203_Ve5fxVQ1gGkbxrto1aMWZBnD2UnoRNJ7.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position-x: right;
+}  
 
 .classtable2{
     background-color: rgb(255, 233, 198);
@@ -38,6 +41,11 @@
 }
 .classpage4{
     background-color: rgb(245, 230, 225);
+}
+.classpage5{
+    background-image: url("https://as2.ftcdn.net/v2/jpg/07/22/86/95/1000_F_722869555_EjjI80I708gdWBFvCDclkBSuKApbLC9H.jpg");
+    background-repeat:no-repeat; 
+    background-size:auto  
 }
 .classpage8{
     background-color: rgb(212, 244, 212);
@@ -116,12 +124,16 @@ color:chocolate
     font-size:medium;
     font-weight: bolder;
     color: blue;
+    
 }
 
 .customPopoverContent {
     width: 400px;
     height: 200px;
     overflow: auto; /* Optional: Add this to handle overflow content */
+    background-color: rgb(215, 243, 243);
    
 }
- 
+ .classnotificationdata{
+    background-color: #f3c4af;
+ }
