@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller","sap/ui/core/Fragment"],function(e,r){"use strict";return e.extend("com.app.vendorpage.controller.Basecontroller",{onInit:function(){},createData:function(e,r,n){debugger;return new Promise((t,o)=>{e.create(n,r,{refreshAfterChange:true,success:function(e){t(e)},error:function(e){o(e)}})})},deleteData:function(e,r,n){return new Promise((t,o)=>{e.remove(`${r}/${n}`,{success:function(e){t(e)},error:function(e){o(e)}})})}})});
+//# sourceMappingURL=Basecontroller.js.map

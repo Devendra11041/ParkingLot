@@ -8,10 +8,9 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/model/odata/v2/ODataModel",
-	"sap/m/MessageBox",
-	"sap/ndc/BarcodeScanner"
+	"sap/m/MessageBox"
 
-], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, ODataModel, FilterOperator, MessageBox, DateFormat, BarcodeScanner) {
+], function (Controller, JSONModel, Device, MessageToast, Fragment, Filter, ODataModel, FilterOperator, MessageBox, DateFormat) {
 	"use strict";
 
 	return Controller.extend("com.app.parkinglot.controller.Home1", {
@@ -188,8 +187,8 @@ sap.ui.define([
 				//await this.createData(oModel, oPayload.VehicalDeatils, "/History");
 
 				//   start SMS
-				const accountSid =""
-				const authToken = ""
+				const accountSid = "ACfcd333bcb3dc2c2febd267ce455a6762"
+				const authToken = "ea44ceea6205dd2864f4b5beb40d31c0"
 
 				// debugger
 				const toNumber = `+91${phone}`
@@ -269,7 +268,7 @@ sap.ui.define([
 				console.error("Error:", error);
 			}
 			this.onclearvalues();
-
+			
 		},
 		//validation for phone no checking
 		checkPhoneExists: async function (oModel, trimmedPhone) {
@@ -771,8 +770,9 @@ sap.ui.define([
 
 					})
 					//   start SMS
-					const accountSid = ""
-					const authToken = ""
+					const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
+					const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+
 					// debugger
 					const toNumber = `+91${oSelectedRow.phone}`
 					const fromNumber = '+13613109079';
@@ -1011,7 +1011,7 @@ sap.ui.define([
 			printWindow.document.write('<tr><td>Vehicle Type</td><td>' + vehicalDeatils.vehicalType + '</td></tr>');
 			printWindow.document.write('<tr><td>Plot Number</td><td>' + vehicalDeatils.plotNo_plot_NO + '</td></tr>');
 			printWindow.document.write('<tr><td>Assigned Date</td><td>' + vehicalDeatils.assignedDate + '</td></tr>');
-
+		
 			// Generate barcode
 			debugger
 			const barcodeValue = `${vehicalDeatils.vehicalNo}`;
@@ -1024,7 +1024,7 @@ sap.ui.define([
 				displayValue: true
 			});
 			const barcodeImage = canvas.toDataURL("image/png");
-
+		
 			// Add barcode to print
 			printWindow.document.write('<tr><td>Barcode</td><td><img src="' + barcodeImage + '" alt="Barcode"></td></tr>');
 			printWindow.document.write('</table>');
@@ -1032,56 +1032,6 @@ sap.ui.define([
 			printWindow.document.close();
 			printWindow.print();
 		},
-		onModel: async function () {
-			var oModel = this.getView().getModel("ModelV2");
-			var that = this;
-			await oModel.read("/Reservation", {
-				success: function (oData) {
-					var t = oData.results.length;
-					that.byId("idnotification7").setValue(t);
-				},
-				error: function () {
-				}
-			})
 
-			oModel.refresh()
-		},
-		onBeforeRendering: function () {
-			this.onModel();
-
-		},
-		onAfterRendering: function () {
-			this.onModel();
-		},
-		onScannrPress: function (oEvent) {
-			debugger
-			const that = this
-			const oModel = this.getView().getModel("ModelV2");
-			BarcodeScanner.scan(
-				async function (mResult) {
-					mResult && mResult.text
-					var scannedText = mResult.text;
-					sap.m.MessageBox.show("We got barcode: " + scannedText);
-					await that.checkVehicleNo_scan(oModel, scannedText)
-				}
-			)
-		},
-		checkVehicleNo_scan: async function (oModel, sVehicalNo) {
-			const that = this
-			return new Promise((resolve, reject) => {
-				oModel.read("/VehicalDeatils", {
-					filters: [
-						new sap.ui.model.Filter("vehicalNo", sap.ui.model.FilterOperator.EQ, sVehicalNo)
-					],
-					success: function (oData) {
-						resolve(oData.results.length > 0);
-						that.byId("commentsTextArea").setValue(sVehicalNo)
-					},
-					error: function () {
-						reject("An error occurred while checking vehicle number existence.");
-					}
-				});
-			});
-		},
 	});
 });

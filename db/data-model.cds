@@ -8,7 +8,6 @@ entity PlotNOs {
   key plot_NO           : String;
       inBoundOroutBound : String;
       available         : Boolean;
-      vehical           : Association to VehicalDeatils
 }
 
 entity VehicalDeatils {
@@ -44,5 +43,6 @@ entity Reservation : cuid {
       phone        : Integer64;
       vehicalType  : String;
       Expectedtime : DateTime;
-      plotNo       : Association to PlotNOs
+      plotNo       : Association to PlotNOs;
+      notify       : String
 }

@@ -1,0 +1,30 @@
+/* Enter your custom styles here */
+.classvendorpage {
+    margin-top: 50px;
+    margin-right: 0;
+}
+
+.classvpage {
+    background-color: rgb(245, 209, 196);
+    color: red;
+    background-image: url("https://www.thaimee.co.th/wp-content/uploads/2019/05/About-us-SUB-HEAD.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.Bold {
+    font-size: medium;
+    font-weight: bolder;
+    color: blue;
+
+}
+
+.Reserveheading {
+    margin-bottom: 15px;
+    color: red
+}
+
+.classclearButton {
+    margin-left: 30px; /* Adjust the margin as per your preference */
+}

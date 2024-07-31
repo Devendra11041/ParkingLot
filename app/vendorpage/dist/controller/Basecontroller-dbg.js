@@ -7,7 +7,7 @@ sap.ui.define(
     function (BaseController, Fragment) {
         "use strict";
 
-        return BaseController.extend("com.app.parkinglot.controller.Basecontroller", {
+        return BaseController.extend("com.app.vendorpage.controller.Basecontroller", {
             onInit: function () {
 
             },
@@ -27,7 +27,6 @@ sap.ui.define(
                 })
             },
             deleteData: function (oModel, sPath, ID) {
-                debugger
                 return new Promise((resolve, reject) => {
                     oModel.remove(`${sPath}/${ID}`, {
                         success: function (oSuccessData) {
@@ -39,15 +38,6 @@ sap.ui.define(
                     })
                 })
             },
-            loadFragment: async function (sFragmentName) {
-                const oFragment = await Fragment.load({
-                  id: this.getView().getId(),
-                  name: `com.app.parkinglot.fragment.${sFragmentName}`,
-                  controller: this
-                });
-                this.getView().addDependent(oFragment);
-                return oFragment
-              }
         });
     }
 );

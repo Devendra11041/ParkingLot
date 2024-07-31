@@ -95,6 +95,7 @@
                     <customData>
                         <BadgeCustomData
                             id="idnotification7"
+                            value="{/Reservation/$count}"
                             visible="true"
                         />
                     </customData>
@@ -209,7 +210,6 @@
                                     <Button id="idbuttonscanner" 
                                     class="classscanner"
                                     icon="sap-icon://bar-code"
-                                    press="onScannrPress"
                                     />
                                 </HBox>
                                 <VBox id="ReserveVboxmpt">

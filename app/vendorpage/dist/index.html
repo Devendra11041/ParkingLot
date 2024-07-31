@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Parking Lot app</title>
+    <title>Vendor Page</title>
     <style>
         html, body, body > div, #container, #container-uiarea {
             height: 100%;
@@ -12,10 +12,10 @@
     </style>
     <script
         id="sap-ui-bootstrap"
-        src="https://sapui5.hana.ondemand.com/1.125.1/resources/sap-ui-core.js"
+        src="https://sapui5.hana.ondemand.com/1.126.0/resources/sap-ui-core.js"
         data-sap-ui-theme="sap_horizon"
         data-sap-ui-resourceroots='{
-            "com.app.parkinglot": "./"
+            "com.app.vendorpage": "./"
         }'
         data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
         data-sap-ui-compatVersion="edge"
@@ -23,14 +23,12 @@
         data-sap-ui-frameOptions="trusted"
     ></script>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-
 <body class="sapUiBody sapUiSizeCompact" id="content">
     <div
         data-sap-ui-component
-        data-name="com.app.parkinglot"
+        data-name="com.app.vendorpage"
         data-id="container"
-        data-settings='{"id" : "com.app.parkinglot"}'
+        data-settings='{"id" : "com.app.vendorpage"}'
         data-handle-validation="true"
     ></div>
 </body>

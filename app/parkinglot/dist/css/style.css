@@ -184,11 +184,11 @@
     overflow: auto;
 }
 .greenBackground {
-    background-color: rgb(189, 243, 189);
+    background-color: green;
 }
 
 .redBackground {
-    background-color: rgb(240, 120, 120);
+    background-color: red;
 }
 
 /* Optional: Add some padding and margin to the boxes for better spacing */

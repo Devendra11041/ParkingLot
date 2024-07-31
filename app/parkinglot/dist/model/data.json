@@ -1,0 +1,45 @@
+{
+	"selectedKey": "page1",
+	"navigation": [
+		{
+			"title": "Allocate Lot",
+			"icon":"sap-icon://bus-public-transport",
+			"key": "page1"
+		},
+		{
+			"title": "All Parking lots",
+			"key": "page2",
+			"icon":"sap-icon://bbyd-active-sales"
+		},
+		{
+			"title": "Assigned Lots",
+			"icon":"sap-icon://activity-assigned-to-goal",
+			"key": "page3"
+		},
+		{
+			"title": "Empty Lots",
+			"icon":"sap-icon://cart-2",
+			"key": "page4"
+		},
+		{
+			"title": "ReserveLot",
+			"icon":"sap-icon://add",
+			"key": "page5"
+		},
+		{
+			"title": "ReservedLots",
+			"icon":"sap-icon://touch",
+			"key": "page8"
+		},
+		{
+			"title": "Monitoring",
+			"icon": "sap-icon://business-objects-experience",
+			"key":"page6"
+		},
+		{
+			"title": "History",
+			"icon":"sap-icon://customer-history",
+			"key": "page7"
+		}
+	]
+}
