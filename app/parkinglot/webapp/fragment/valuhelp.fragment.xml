@@ -7,7 +7,7 @@
         title="Products"
         items="{
         path: '/PlotNOs',
-        filters: [{ path: 'available', operator: 'EQ', value1: true }]
+        filters: [{ path: 'available', operator: 'EQ', value1: 'Empty' }]
     }"
         search=".onValueHelpDialogSearch"
         confirm=".onValueHelpDialogClose"

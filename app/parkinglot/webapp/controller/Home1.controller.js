@@ -82,9 +82,9 @@ sap.ui.define([
 		onExit: function () {
 			Device.media.detachHandler(this._handleMediaChange, this);
 		},
-		statusTextFormatter: function (bStatus) {
-			return bStatus ? "Empty" : "Not Empty"; // Modify as per your requirement
-		},
+		// statusTextFormatter: function (bStatus) {
+		// 	return bStatus ? "Empty" : "Not Empty"; // Modify as per your requirement
+		// },
 
 		//
 		onValueHelpRequest: function (oEvent) {
@@ -104,7 +104,7 @@ sap.ui.define([
 			this._pValueHelpDialog.then(function (oDialog) {
 				// Create a filter for the binding
 				oDialog.setModel(this.getView().getModel("ModelV2"));
-				oDialog.getBinding("items").filter([new Filter("plot_NO", FilterOperator.Contains, sInputValue)]);
+				oDialog.getBinding("items").filter([new Filter("plot_NO", sap.ui.model.FilterOperator.Contains, sInputValue)]);
 				// Open ValueHelpDialog filtered by the input's value
 				oDialog.open(sInputValue);
 			}.bind(this));
@@ -112,12 +112,13 @@ sap.ui.define([
 
 		onValueHelpDialogSearch: function (oEvent) {
 			var sValue = oEvent.getParameter("value");
-			var oFilter = new Filter("plot_NO", FilterOperator.Contains, sValue);
+			var oFilter = new Filter("plot_NO", sap.ui.model.FilterOperator.Contains, sValue);
 
 			oEvent.getSource().getBinding("items").filter([oFilter]);
 		},
 
 		onValueHelpDialogClose: function (oEvent) {
+			debugger
 			var sDescription,
 				oSelectedItem = oEvent.getParameter("selectedItem");
 			oEvent.getSource().getBinding("items").filter([]);
@@ -188,8 +189,8 @@ sap.ui.define([
 				//await this.createData(oModel, oPayload.VehicalDeatils, "/History");
 
 				//   start SMS
-				const accountSid =""
-				const authToken = ""
+				const accountSid = "ACfcd333bcb3dc2c2febd267ce455a6762"
+				const authToken = "ea44ceea6205dd2864f4b5beb40d31c0"
 
 				// debugger
 				const toNumber = `+91${phone}`
@@ -255,7 +256,12 @@ sap.ui.define([
 				sap.m.MessageToast.show(
 					`Vehicel No ${vehicalNo} allocated to Slot No ${plotNo}`,
 				);
-				oModel.update("/PlotNOs('" + plotNo + "')", oPayload.plotNo, {
+
+				const updatedParkingLot = {
+					available: "Not Empty" // Assuming false represents empty parking
+					// Add other properties if needed
+				};
+				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
 
 					}.bind(this),
@@ -426,7 +432,7 @@ sap.ui.define([
 
 
 				const updatedParkingLot = {
-					available: true // Assuming false represents empty parking
+					available: "Empty" // Assuming false represents empty parking
 					// Add other properties if needed
 				};
 				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
@@ -586,10 +592,10 @@ sap.ui.define([
 						sap.m.MessageToast.show("VehicalDeatils updated successfully!");
 
 						// Update PlotNOs entities sequentially
-						oModel.update("/PlotNOs('" + oval + "')", { available: true }, {
+						oModel.update("/PlotNOs('" + oval + "')", { available: "Empty" }, {
 							success: function () {
 								// Now update the new plotNo
-								oModel.update("/PlotNOs('" + oc + "')", { available: false }, {
+								oModel.update("/PlotNOs('" + oc + "')", { available: "Not Empty" }, {
 									success: function () {
 										sap.m.MessageToast.show("PlotNOs updated successfully!");
 										oModel.refresh(true);
@@ -672,7 +678,21 @@ sap.ui.define([
 			// Call OData service to create reservation
 			try {
 				await this.createData(oModel, oPayload, "/Reservation");
-				sap.m.MessageBox.success("Parking lot reserved  successfully");
+
+				const updatedParkingLot = {
+					available: "Reserved" // Assuming false represents empty parking
+					// Add other properties if needed
+				};
+
+				oModel.update("/PlotNOs('" + sParkingLot + "')", updatedParkingLot, {
+					success: function () {
+						sap.m.MessageBox.success("Parking lot reserved  successfully");
+					}.bind(this),
+					error: function (oError) {
+
+						sap.m.MessageBox.error("Failed to update: " + oError.message);
+					}.bind(this)
+				});
 
 			} catch (error) {
 				sap.m.MessageBox.error("Failed to create reservation. Please try again.");
@@ -755,7 +775,7 @@ sap.ui.define([
 					oModel.remove(orow, {
 						success: function () {
 							oModel.refresh()
-							oModel.update("/PlotNOs('" + temp + "')", { available: false }, {
+							oModel.update("/PlotNOs('" + temp + "')", { available: "Not Empty" }, {
 								success: function () {
 									sap.m.MessageBox.success(`Reserved Vehicle ${oSelectedRow.vehicalNo} assigned successfully to plot ${oSelectedRow.plotNo_plot_NO}.`);
 									oModel.refresh();
@@ -771,8 +791,9 @@ sap.ui.define([
 
 					})
 					//   start SMS
-					const accountSid = ""
-					const authToken = ""
+					const accountSid = 'ACfcd333bcb3dc2c2febd267ce455a6762';
+					const authToken = 'ea44ceea6205dd2864f4b5beb40d31c0';
+
 					// debugger
 					const toNumber = `+91${oSelectedRow.phone}`
 					const fromNumber = '+13613109079';
@@ -821,21 +842,27 @@ sap.ui.define([
 				success: function (oData) {
 					console.log("Fetched Data:", oData);
 					var aItems = oData.results;
-					var availableCount = aItems.filter(item => item.available === true).length;
-					var occupiedCount = aItems.filter(item => item.available === false).length;
+					var availableCount = aItems.filter(item => item.available === "Empty").length;
+					var occupiedCount = aItems.filter(item => item.available === "Not Empty").length;
+					var oReservedCount = aItems.filter(item => item.available === "Reserved").length;
 
 					var aChartData = {
 						Items: [
 							{
-								available: true,
+								available: "Empty",
 								Count: availableCount,
 								available: `Empty Lots - ${availableCount}`,
 
 							},
 							{
-								available: false,
+								available: " Not Empty",
 								Count: occupiedCount,
 								available: `Not Empty Lots -${occupiedCount}`
+							},
+							{
+								available: "Reserved",
+								Count: oReservedCount,
+								available: `Reserved -${oReservedCount}`
 							}
 						]
 					};
@@ -958,14 +985,17 @@ sap.ui.define([
 
 			oModel.read("/PlotNOs", {
 				success: function (oData) {
-					var availableCount = 0;
-					var unavailableCount = 0;
+					var emptyCount = 0;
+					var notEmptyCount = 0;
+					var reservedCount = 0;
 
 					oData.results.forEach(function (oPlot) {
-						if (oPlot.available) {
-							availableCount++;
-						} else {
-							unavailableCount++;
+						if (oPlot.status === "Empty") {
+							emptyCount++;
+						} else if (oPlot.status === "Not Empty") {
+							notEmptyCount++;
+						} else if (oPlot.status === "Reserved") {
+							reservedCount++;
 						}
 
 						var oBox = new sap.m.VBox({
@@ -981,20 +1011,27 @@ sap.ui.define([
 									text: oPlot.inBoundOroutBound
 								})
 							]
-						}).addStyleClass(oPlot.available ? "greenBackground" : "redBackground");
+						}).addStyleClass(
+							oPlot.status === "Empty" ? "greenBackground" :
+								oPlot.status === "Not Empty" ? "redBackground" :
+									"yellowBackground" // Reserved
+						)
 
 						oParkingLotContainer.addItem(oBox);
-					});
+					}.bind(this));
 
 					// Update the counts in the view
-					this.byId("availableCount").setText("(" + availableCount + ")");
-					this.byId("unavailableCount").setText("(" + unavailableCount + ")");
+					this.byId("emptyCount").setText("(" + emptyCount + ")");
+					this.byId("notEmptyCount").setText("(" + notEmptyCount + ")");
+					this.byId("reservedCount").setText("(" + reservedCount + ")");
 				}.bind(this),
 				error: function (oError) {
 					sap.m.MessageToast.show("Error fetching parking lot details.");
 				}
 			});
 		},
+
+
 		//Generating the print form
 		triggerPrintForm: function (vehicalDeatils) {
 			// Create a temporary print area

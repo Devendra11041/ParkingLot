@@ -206,10 +206,11 @@
                                         text="PARKING LOT ALLOCATION"
                                         class="Reserveheading"
                                     />
-                                    <Button id="idbuttonscanner" 
-                                    class="classscanner"
-                                    icon="sap-icon://bar-code"
-                                    press="onScannrPress"
+                                    <Button
+                                        id="idbuttonscanner"
+                                        class="classscanner"
+                                        icon="sap-icon://bar-code"
+                                        press="onScannrPress"
                                     />
                                 </HBox>
                                 <VBox id="ReserveVboxmpt">
@@ -293,7 +294,7 @@
                                         suggestionItems="{
                 path: '/PlotNOs',
                 sorter: { path: 'plot_NO', descending: false },
-                filters: [{ path: 'available', operator: 'EQ', value1: true }]
+                filters: [{ path: 'available', operator: 'EQ', value1:'Empty' }]
             }"
                                         suggestionItemSelected=".onSuggestionItemSelected"
                                         value="{localModel>/plotNo_plot_NO}"
@@ -342,70 +343,54 @@
                         class="classpage2"
                     >
                         <VBox
-                            id="idpage2vbox1"
+                            id="iddatavisuvalization"
                             class="sapUiSmallMargin"
                             alignItems="Center"
                         >
-                            <Title
-                                id="page2idtext1"
-                                text="Parking Lot Visualization"
-                                level="H1"
-                            />
-
                             <HBox
-                                id="idpagehbox"
+                                id="iuhjn"
+                                justifyContent="SpaceBetween"
                                 class="sapUiSmallMargin"
-                                alignItems="Center"
-                                justifyContent="Center"
                             >
-                                <VBox
-                                    id="idboxikm"
-                                    alignItems="Center"
-                                    justifyContent="Center"
-                                    class="greenBackground"
-                                    width="20px"
-                                    height="20px"
-                                />
                                 <Text
-                                    id="iduhtextbox"
-                                    text=": Available"
-                                    class="sapUiSmallMarginBeginEnd"
+                                    id="idclastgfa"
+                                    text="Parking Lot Status:"
                                 />
-                                <Text
-                                    id="availableCount"
-                                    text="(0)"
-                                    class="sapUiSmallMarginBeginEnd"
-                                />
-                                <VBox
-                                    id="idmnvboxid"
-                                    alignItems="Center"
-                                    justifyContent="Center"
-                                    class="redBackground"
-                                    width="20px"
-                                    height="20px"
-                                />
-                                <Text
-                                    id="idboxyhgt"
-                                    text=": Not Available"
-                                    class="sapUiSmallMarginBeginEnd"
-                                />
-                                <Text
-                                    id="unavailableCount"
-                                    text="(0)"
-                                    class="sapUiSmallMarginBeginEnd"
-                                />
+                                <HBox id="tgrsjhdaid">
+                                    <Text
+                                        id="idtextyg"
+                                        text="Empty: "
+                                    />
+                                    <Text
+                                        id="emptyCount"
+                                        text="(0)"
+                                    />
+                                </HBox>
+                                <HBox id="idbobytg">
+                                    <Text
+                                        id="iddatare"
+                                        text="Not Empty: "
+                                    />
+                                    <Text
+                                        id="notEmptyCount"
+                                        text="(0)"
+                                    />
+                                </HBox>
+                                <HBox id="idgty">
+                                    <Text
+                                        id="idmeta"
+                                        text="Reserved: "
+                                    />
+                                    <Text
+                                        id="reservedCount"
+                                        text="(0)"
+                                    />
+                                </HBox>
                             </HBox>
-
-                            <VBox
-                                id="iddatavisuvalization"
-                                class="sapUiSmallMargin"
-                                alignItems="Center"
-                            >
-                                <HBox
-                                    id="parkingLotContainer"
-                                    wrap="Wrap"
-                                />
-                            </VBox>
+                            <HBox
+                                id="parkingLotContainer"
+                                wrap="Wrap"
+                            />
                         </VBox>
                     </ScrollContainer>
                     <ScrollContainer
@@ -531,7 +516,7 @@
                                                 id="parkingLotSelect"
                                                 required="true"
                                                 editable="true"
-                                                items="{path: '/PlotNOs', filters: [{path: 'available', operator: 'EQ', value1:true }], templateShareable: true}"
+                                                items="{path: '/PlotNOs', filters: [{path: 'available', operator: 'EQ', value1:'Empty'}], templateShareable: true}"
                                             >
                                                 <core:Item
                                                     id="_IDGenItem3"
@@ -615,7 +600,6 @@
                                 <ColumnListItem
                                     id="emptyslotsCLI"
                                     class="classemptytable"
-                                    visible="{ path: 'available'}"
                                 >
                                     <cells>
                                         <Text
@@ -632,7 +616,7 @@
                                     <cells>
                                         <Text
                                             id="idProcessemptyvalue"
-                                            text="{ path: 'available', formatter: '.statusTextFormatter' }"
+                                            text="{available}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -743,7 +727,7 @@
                                                filters: [{
                                                path: 'available',
                                                operator: 'EQ',
-                                                value1: true
+                                                value1: 'Empty'
                                                }]
                                              }"
                                             >
