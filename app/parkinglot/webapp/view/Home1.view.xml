@@ -347,39 +347,70 @@
                             class="sapUiSmallMargin"
                             alignItems="Center"
                         >
+                            <Text
+                                id="idTitle"
+                                text="Parking Lot Status"
+                                class="sapUiMediumMarginBottom"
+                                wrapping="false"
+                            />
                             <HBox
                                 id="iuhjn"
                                 justifyContent="SpaceBetween"
                                 class="sapUiSmallMargin"
                             >
-                                <Text
-                                    id="idclastgfa"
-                                    text="Parking Lot Status:"
-                                />
-                                <HBox id="tgrsjhdaid">
+                                <HBox
+                                    id="tgrsjhdaid"
+                                    alignItems="Center"
+                                    class="sapUiSmallMarginEnd"
+                                >
                                     <Text
                                         id="idtextyg"
                                         text="Empty: "
+                                        class="sapUiTinyMarginEnd"
+                                    />
+                                    <Text
+                                        id="idtextre"
+                                        text=" "
+                                        class="statusBox greenBackground sapUiTinyMarginEnd"
                                     />
                                     <Text
                                         id="emptyCount"
                                         text="(0)"
                                     />
                                 </HBox>
-                                <HBox id="idbobytg">
+                                <HBox
+                                    id="idbobytg"
+                                    alignItems="Center"
+                                    class="sapUiSmallMarginEnd"
+                                >
                                     <Text
                                         id="iddatare"
                                         text="Not Empty: "
+                                        class="sapUiTinyMarginEnd"
+                                    />
+                                    <Text
+                                        id="idtextmnk"
+                                        text=" "
+                                        class="statusBox redBackground sapUiTinyMarginEnd"
                                     />
                                     <Text
                                         id="notEmptyCount"
                                         text="(0)"
                                     />
                                 </HBox>
-                                <HBox id="idgty">
+                                <HBox
+                                    id="idgty"
+                                    alignItems="Center"
+                                >
                                     <Text
                                         id="idmeta"
                                         text="Reserved: "
+                                        class="sapUiTinyMarginEnd"
+                                    />
+                                    <Text
+                                        id="idtgbuhs"
+                                        text=" "
+                                        class="statusBox yellowBackground sapUiTinyMarginEnd"
                                     />
                                     <Text
                                         id="reservedCount"
@@ -390,6 +421,7 @@
                             <HBox
                                 id="parkingLotContainer"
                                 wrap="Wrap"
+                                class="parkingLotContainerBox"
                             />
                         </VBox>
                     </ScrollContainer>

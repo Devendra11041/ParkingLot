@@ -36,7 +36,7 @@
 }
 
 .classpage2 {
-    background-color:white
+    background-color: white
 }
 
 .classpage3 {
@@ -183,25 +183,47 @@
     height: 200px;
     overflow: auto;
 }
+
+.sapUiSmallMargin {
+    margin: 0.5rem;
+}
+
+.sapUiMediumMarginBottom {
+    margin-bottom: 1rem;
+}
+
+.sapUiTinyMarginEnd {
+    margin-right: 0.25rem;
+}
+
+.statusBox {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .greenBackground {
-    background-color: rgb(80, 177, 80)
+    background-color: rgb(121, 233, 121);
+    /* Green */
 }
 
 .redBackground {
-    background-color: rgb(174, 70, 70);
+    background-color: #e46c6c;
+    /* Red */
 }
 
-.yellowBackground{
-    background-color: rgb(234, 234, 118);
+.yellowBackground {
+    background-color: rgb(232, 232, 99);
+    /* Yellow */
 }
 
-/* Optional: Add some padding and margin to the boxes for better spacing */
-.sapMFlexBox > .sapMVBox {
-    margin: 5px;
-    padding: 10px;
+.parkingLotContainerBox {
     border: 1px solid #ccc;
-    text-align: center;
-}
-.classscanner{
-  margin-left: 50Px;
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    box-sizing: border-box;
 }

@@ -178,10 +178,18 @@ sap.ui.define([
 				return;
 			};
 			var oplotnoexists = await this.plotnoexists(oModel, plotNo)
+
 			if (!oplotnoexists) {
 				MessageToast.show("Please Select Valid Plotn No")
 				return
-			}
+			};
+			var plotAssigned = await this.checkIfExists(oModel, "/VehicalDeatils", "plotNo_plot_NO", oPayload.VehicalDeatils.plotNo_plot_NO);
+       
+            if (plotAssigned) {
+                MessageToast.show(" plot Number or Phone number already assigned ");
+                return;
+            };
+		
 
 			try {
 				// Assuming createData method sends a POST request
@@ -310,6 +318,19 @@ sap.ui.define([
 				});
 			});
 		},
+		checkIfExists: async function (oModel, sEntitySet, sProperty, sValue) {
+            return new Promise((resolve, reject) => {
+                oModel.read(sEntitySet, {
+                    filters: [new sap.ui.model.Filter(sProperty, sap.ui.model.FilterOperator.EQ, sValue)],
+                    success: (oData) => {
+                        resolve(oData.results.length > 0);
+                    },
+                    error: (oError) => {
+                        reject(oError);
+                    }
+                });
+            });
+        },
 		//Validation for plot checking
 		plotnoexists: async function (oModel, splotNo) {
 			return new Promise((resolve, reject) => {
@@ -347,7 +368,7 @@ sap.ui.define([
 			return new Promise((resolve, reject) => {
 				oModel.read("/VehicalDeatils", {
 					filters: [
-						new Filter("vehicalNo", FilterOperator.EQ, sVehicalNo),
+						new Filter("plotNo_plot_NO", FilterOperator.EQ, sVehicalNo),
 
 					],
 					success: function (oData) {
@@ -876,7 +897,8 @@ sap.ui.define([
 			});
 		},
 		_setHistoryModel: function () {
-			debugger
+			
+			
 			var oModel = this.getOwnerComponent().getModel("ModelV2");
 			var that = this;
 
@@ -898,7 +920,7 @@ sap.ui.define([
 		},
 
 		_processHistoryData: function (aItems) {
-			debugger
+			
 			var oData = {};
 
 			aItems.forEach(function (item) {
@@ -982,7 +1004,7 @@ sap.ui.define([
 		loadParkingLots: function () {
 			var oModel = this.getOwnerComponent().getModel("ModelV2");
 			var oParkingLotContainer = this.byId("parkingLotContainer");
-
+			const that = this;
 			oModel.read("/PlotNOs", {
 				success: function (oData) {
 					var emptyCount = 0;
@@ -990,11 +1012,11 @@ sap.ui.define([
 					var reservedCount = 0;
 
 					oData.results.forEach(function (oPlot) {
-						if (oPlot.status === "Empty") {
+						if (oPlot.available === "Empty") {
 							emptyCount++;
-						} else if (oPlot.status === "Not Empty") {
+						} else if (oPlot.available === "Not Empty") {
 							notEmptyCount++;
-						} else if (oPlot.status === "Reserved") {
+						} else if (oPlot.available === "Reserved") {
 							reservedCount++;
 						}
 
@@ -1009,11 +1031,21 @@ sap.ui.define([
 								}),
 								new sap.m.Text({
 									text: oPlot.inBoundOroutBound
+								}),
+								new sap.m.Link({
+									text: oPlot.available,
+									press: () => {
+										that._handleLinkPress(oPlot.plot_NO);
+									},
+									enabled: oPlot.available == 'Empty'? false:true
 								})
+								// new sap.m.Text({
+								// 	text: VehicalDeatils.vehicalNo
+								// })
 							]
 						}).addStyleClass(
-							oPlot.status === "Empty" ? "greenBackground" :
-								oPlot.status === "Not Empty" ? "redBackground" :
+							oPlot.available === "Empty" ? "greenBackground" :
+								oPlot.available === "Not Empty" ? "redBackground" :
 									"yellowBackground" // Reserved
 						)
 
@@ -1031,6 +1063,11 @@ sap.ui.define([
 			});
 		},
 
+		_handleLinkPress: function(plotNum){
+			debugger;
+			
+
+		},
 
 		//Generating the print form
 		triggerPrintForm: function (vehicalDeatils) {

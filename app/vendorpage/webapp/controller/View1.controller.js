@@ -68,8 +68,22 @@ sap.ui.define([
                 // Create the reservation entry
                 try {
                     await this.createData(oModel, oPayload, "/Reservation");
-                    sap.m.MessageBox.success("Parking lot reserved successfully");
+                    // sap.m.MessageBox.success("Parking lot reserved successfully");
                     // oModel.refresh(true);
+                    const updatedParkingLot = {
+                        available: "Reserved" // Assuming false represents empty parking
+                        // Add other properties if needed
+                    };
+    
+                    oModel.update("/PlotNOs('" + sParkingLot + "')", updatedParkingLot, {
+                        success: function () {
+                            sap.m.MessageBox.success("Parking lot reserved  successfully");
+                        }.bind(this),
+                        error: function (oError) {
+    
+                            sap.m.MessageBox.error("Failed to update: " + oError.message);
+                        }.bind(this)
+                    });
                 } catch (error) {
                     sap.m.MessageBox.error("Failed to create reservation. Please try again.");
                     console.error("Error creating reservation:", error);

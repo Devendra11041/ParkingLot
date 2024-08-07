@@ -1,0 +1,82 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns="sap.m"
+>
+    <Dialog id="idDialog">
+        <f:SimpleForm
+            id="idForm1"
+            layout="ResponsiveGridLayout"
+            editable="true"
+            title="Parking Lot Allocation Form with XYZ Warehouse"
+        >
+            <f:content>
+                <Label
+                    text="Vehicle Number"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint1"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/vehicalNo}"
+                    id="textprint1"
+                />
+
+                <Label
+                    text="Driver Name"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint2"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/driverName}"
+                    id="textprint2"
+                />
+
+                <Label
+                    text="Driver Phone Number"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint3"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/phone}"
+                    id="textprint3"
+                />
+
+                <Label
+                    text="Vehicle Type"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint4"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/vehicalType}"
+                    id="textprint4"
+                />
+
+                <Label
+                    text="Parking Lot Number"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint5"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/plotNo_plot_NO}"
+                    id="textprint5"
+                />
+
+                <Label
+                    text="Entry Date"
+                    class="bold-red-label"
+                    width="120px"
+                    id="labelprint6"
+                />
+                <Text
+                    text="{localModel>/VehicalDeatils/assignedDate}"
+                    id="textprint6"
+                />
+            </f:content>
+        </f:SimpleForm>
+    </Dialog>
+</core:FragmentDefinition>
