@@ -227,3 +227,32 @@
     gap: 1rem;
     box-sizing: border-box;
 }
+
+.vehicleDetailsContainer {
+    padding: 15px;
+    background-color: #f4bfbf;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+.vehicleDetailsBox {
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    color:yellowgreen
+}
+
+.vehicleDetailsLabel {
+    color: #007acc; /* Color for labels */
+    font-weight: bold; /* Optional: Make labels bold */
+    margin-right: 10px; /* Space between label and value */
+}
+
+.vehicleDetailsValue {
+    color: #333; /* Color for values */
+}
+
+.vehicleDetailsBox {
+    padding: 10px; /* Optional: Add padding around the box */
+}

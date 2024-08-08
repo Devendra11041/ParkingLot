@@ -265,12 +265,12 @@
                                         class="classinputmptc"
                                         width="100%"
                                     >
-                                        <core:Item
+                                        <core:ListItem
                                             id="iditemsee"
                                             key="inward"
                                             text="inward"
                                         />
-                                        <core:Item
+                                        <core:ListItem
                                             id="itemsdd"
                                             key="outward"
                                             text="outward"
@@ -418,6 +418,12 @@
                                     />
                                 </HBox>
                             </HBox>
+                            <VBox
+                                id="vehicleDetailsContainer"
+                                width="100%"
+                                class="vehicleDetailsContainer"
+                                visible="false"
+                            />
                             <HBox
                                 id="parkingLotContainer"
                                 wrap="Wrap"

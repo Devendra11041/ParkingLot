@@ -82,12 +82,17 @@ sap.ui.define([
 		onExit: function () {
 			Device.media.detachHandler(this._handleMediaChange, this);
 		},
-		// statusTextFormatter: function (bStatus) {
-		// 	return bStatus ? "Empty" : "Not Empty"; // Modify as per your requirement
-		// },
-
-		//
+        
+		//Value help fragment opening function 
 		onValueHelpRequest: function (oEvent) {
+			var oView = this.getView();
+ 
+            // Get the Select control
+            var oSelect = oView.byId("idselectvt");
+ 
+            // Alternatively, get the selected item and its text
+            var oSelectedItem = oSelect.getSelectedItem();
+            var sSelectedText = oSelectedItem ? oSelectedItem.getText() : null;
 			var sInputValue = oEvent.getSource().getValue(),
 				oView = this.getView();
 
@@ -104,7 +109,7 @@ sap.ui.define([
 			this._pValueHelpDialog.then(function (oDialog) {
 				// Create a filter for the binding
 				oDialog.setModel(this.getView().getModel("ModelV2"));
-				oDialog.getBinding("items").filter([new Filter("plot_NO", sap.ui.model.FilterOperator.Contains, sInputValue)]);
+				oDialog.getBinding("items").filter([new Filter("inBoundOroutBound", sap.ui.model.FilterOperator.EQ,sSelectedText)]);
 				// Open ValueHelpDialog filtered by the input's value
 				oDialog.open(sInputValue);
 			}.bind(this));
@@ -240,10 +245,10 @@ sap.ui.define([
 						var utterance = new SpeechSynthesisUtterance(message);
 
 						// Set properties (optional)
-						utterance.pitch = 1; // Range between 0 (lowest) and 2 (highest)
-						utterance.rate = 0.75;  // Range between 0.1 (lowest) and 10 (highest)
-						utterance.volume = 1; // Range between 0 (lowest) and 1 (highest)
-						utterance.lang = lang; // Set the language
+						utterance.pitch = 1; 
+						utterance.rate = 0.75;  
+						utterance.volume = 1; 
+						utterance.lang = lang; 
 
 						// Speak the utterance
 						debugger
@@ -266,8 +271,8 @@ sap.ui.define([
 				);
 
 				const updatedParkingLot = {
-					available: "Not Empty" // Assuming false represents empty parking
-					// Add other properties if needed
+					available: "Not Empty" 
+					
 				};
 				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
@@ -454,7 +459,7 @@ sap.ui.define([
 
 				const updatedParkingLot = {
 					available: "Empty" // Assuming false represents empty parking
-					// Add other properties if needed
+					
 				};
 				oModel.update("/PlotNOs('" + plotNo + "')", updatedParkingLot, {
 					success: function () {
@@ -467,41 +472,6 @@ sap.ui.define([
 				this.onclearvalues();
 			} catch (error) {
 				sap.m.MessageBox.error("Some technical Issue");
-			}
-		},
-		//Print function
-		OnPrintpress: async function () {
-			debugger
-			var oSelected = this.byId("AssignedSlotsTable").getSelectedItems();
-			if (oSelected.length === 0) {
-				MessageBox.error("Please Select atleast one Book to Edit");
-				return
-			};
-
-			var oSelect = oSelected[0]
-			if (oSelect) {
-				var ovehicalNo = oSelect.getBindingContext().getProperty("vehicalNo");
-				var odriverName = oSelect.getBindingContext().getProperty("driverName");
-				var ophone = oSelect.getBindingContext().getProperty("phone");
-				var ovehicalType = oSelect.getBindingContext().getProperty("vehicalType");
-				var oassignedDate = oSelect.getBindingContext().getProperty("assignedDate");
-				var oplotNo = oSelect.getBindingContext().getProperty("plotNo");
-			};
-			if (!this.oprint) {
-				this.oprint = await Fragment.load({
-					id: this.getView().getId(),
-					name: "com.app.parkinglot.fragment.print",
-					controller: this
-				});
-				this.getView().addDependent(this.oprint);
-			}
-
-			this.oprint.open();
-		},
-		onCloseDialog: function () {
-			var oDialog = this.byId("idprintparking");
-			if (oDialog) {
-				oDialog.close();
 			}
 		},
 		//vehicel submission details are alredy in 
@@ -582,11 +552,11 @@ sap.ui.define([
 			var oButton = oEvent.getSource();
 			var sButtonText = oButton.getText();
 
-			var oRow = oButton.getParent(); // Get the table row
-			var oCell = oRow.getCells()[4]; // Assuming the 5th cell contains both Text and ComboBox
+			var oRow = oButton.getParent(); 
+			var oCell = oRow.getCells()[4]; 
 
-			var oText = oCell.getItems()[0]; // Assuming the first item is Text
-			var oComboBox = oCell.getItems()[1]; // Assuming the second item is ComboBox
+			var oText = oCell.getItems()[0]; 
+			var oComboBox = oCell.getItems()[1];
 
 			if (sButtonText === "Edit") {
 				// Switching to edit mode
@@ -701,8 +671,8 @@ sap.ui.define([
 				await this.createData(oModel, oPayload, "/Reservation");
 
 				const updatedParkingLot = {
-					available: "Reserved" // Assuming false represents empty parking
-					// Add other properties if needed
+					available: "Reserved" 
+					
 				};
 
 				oModel.update("/PlotNOs('" + sParkingLot + "')", updatedParkingLot, {
@@ -721,7 +691,7 @@ sap.ui.define([
 			} this.onclearreservations();
 		},
 
-		// Function to check if vehicle number exists in backend
+		
 		// Function to check if vehicle number exists in backend
 		plotnovalidation: async function (oModel, splotNo) {
 			return new Promise((resolve, reject) => {
@@ -1063,48 +1033,129 @@ sap.ui.define([
 			});
 		},
 
-		_handleLinkPress: function(plotNum){
-			debugger;
-			
-
+		_handleLinkPress: function (plotNum) {
+			var oModel = this.getOwnerComponent().getModel("ModelV2");
+		
+			// Fetch vehicle details associated with the plot number
+			oModel.read("/VehicalDeatils", {
+				filters: [
+					new sap.ui.model.Filter("plotNo_plot_NO", sap.ui.model.FilterOperator.EQ, plotNum)
+				],
+				success: function (oData) {
+					console.log(oData); // Debug: Check the data returned
+		
+					if (oData.results.length > 0) {
+						var vehicle = oData.results[0]; // Assuming plot number is unique and only one vehicle is associated
+		
+						// Create HBox for each label-value pair
+						var createLabelValueHBox = function (labelText, valueText) {
+							return new sap.m.HBox({
+								alignItems: "Center",
+								justifyContent: "Start",
+								items: [
+									new sap.m.Text({
+										text: labelText,
+										stylingClass: "vehicleDetailsLabel"
+									}),
+									new sap.m.Text({
+										text: valueText,
+										stylingClass: "vehicleDetailsValue"
+									})
+								]
+							});
+						};
+		
+						// Create VBox to hold all HBoxes
+						var oVehicleBox = new sap.m.VBox({
+							width: "300px",
+							height: "auto",
+							alignItems: "Center",
+							justifyContent: "Center",
+							items: [
+								createLabelValueHBox("Vehicle Number:", vehicle.vehicalNo),
+								createLabelValueHBox("Driver Name:", vehicle.driverName),
+								createLabelValueHBox("Phone:", vehicle.phone),
+								createLabelValueHBox("Vehicle Type:", vehicle.vehicalType),
+								createLabelValueHBox("Assigned Date:", new Date(vehicle.assignedDate).toLocaleDateString()),
+								createLabelValueHBox("Unassigned Date:", vehicle.unassignedDate)
+							]
+						}).addStyleClass("vehicleDetailsBox");
+		
+						var oContainer = this.byId("vehicleDetailsContainer");
+						if (oContainer) {
+							oContainer.removeAllItems();
+							oContainer.addItem(oVehicleBox);
+							oContainer.setVisible(true);
+						} else {
+							sap.m.MessageToast.show("Vehicle details container not found.");
+						}
+					} else {
+						sap.m.MessageToast.show("No vehicle details found for the selected plot.");
+					}
+				}.bind(this),
+				error: function (oError) {
+					sap.m.MessageToast.show("Error fetching vehicle details: " + oError.message);
+					console.error(oError); // Debug: Log error details
+				}
+			});
 		},
-
 		//Generating the print form
 		triggerPrintForm: function (vehicalDeatils) {
 			// Create a temporary print area
-			debugger
 			var printWindow = window.open('', '', 'height=500,width=800');
 			printWindow.document.write('<html><head><title>Parking Lot Allocation</title>');
-			printWindow.document.write('<style>body{font-family: Arial, sans-serif;} table{width: 100%; border-collapse: collapse;} td, th{border: 1px solid #ddd; padding: 8px;} th{padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white;}</style>');
+			printWindow.document.write('<style>');
+			printWindow.document.write('body{font-family: Arial, sans-serif;}');
+			printWindow.document.write('.container { display: flex; justify-content: center; margin-top: 20px; }');
+			printWindow.document.write('table{width: 100%; max-width: 600px; border-collapse: collapse;}');
+			printWindow.document.write('td, th{border: 1px solid #ddd; padding: 8px;}');
+			printWindow.document.write('th{padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white;}');
+			printWindow.document.write('.highlight { font-weight: bold; background-color: #f0f0f0; }');
+			printWindow.document.write('</style>');
 			printWindow.document.write('</head><body>');
+		
 			printWindow.document.write('<h2>Parking Lot Allocation</h2>');
+		
+			// Container for table
+			printWindow.document.write('<div class="container">');
 			printWindow.document.write('<table><tr><th>Field</th><th>Value</th></tr>');
-			printWindow.document.write('<tr><td>Vehicle Number</td><td>' + vehicalDeatils.vehicalNo + '</td></tr>');
+			printWindow.document.write('<tr><td class="highlight">Vehicle Number</td><td class="highlight">' + vehicalDeatils.vehicalNo + '</td></tr>');
 			printWindow.document.write('<tr><td>Driver Name</td><td>' + vehicalDeatils.driverName + '</td></tr>');
 			printWindow.document.write('<tr><td>Phone</td><td>' + vehicalDeatils.phone + '</td></tr>');
 			printWindow.document.write('<tr><td>Vehicle Type</td><td>' + vehicalDeatils.vehicalType + '</td></tr>');
-			printWindow.document.write('<tr><td>Plot Number</td><td>' + vehicalDeatils.plotNo_plot_NO + '</td></tr>');
+			printWindow.document.write('<tr><td class="highlight">Plot Number</td><td class="highlight">' + vehicalDeatils.plotNo_plot_NO + '</td></tr>');
 			printWindow.document.write('<tr><td>Assigned Date</td><td>' + vehicalDeatils.assignedDate + '</td></tr>');
-
+		
 			// Generate barcode
-			debugger
 			const barcodeValue = `${vehicalDeatils.vehicalNo}`;
 			const canvas = document.createElement('canvas');
-			JsBarcode(canvas, barcodeValue, {
-				format: "CODE128",
-				lineColor: "#0aa",
-				width: 4,
-				height: 40,
-				displayValue: true
+			
+			// Use a Promise to ensure the barcode is generated before printing
+			new Promise((resolve, reject) => {
+				JsBarcode(canvas, barcodeValue, {
+					format: "CODE128",
+					lineColor: "#0aa",
+					width: 4,
+					height: 40,
+					displayValue: true
+				});
+				resolve(canvas.toDataURL("image/png"));
+			}).then(barcodeImage => {
+				// Add barcode to print
+				printWindow.document.write('<tr><td>Barcode</td><td><img src="' + barcodeImage + '" alt="Barcode"></td></tr>');
+				printWindow.document.write('</table>');
+				printWindow.document.write('</div>'); // Close container
+		
+				printWindow.document.write('</body></html>');
+				printWindow.document.close();
+		
+				// Delay the print to ensure the document is fully loaded
+				printWindow.onload = function () {
+					printWindow.print();
+				};
+			}).catch(error => {
+				console.error("Barcode generation error: ", error);
 			});
-			const barcodeImage = canvas.toDataURL("image/png");
-
-			// Add barcode to print
-			printWindow.document.write('<tr><td>Barcode</td><td><img src="' + barcodeImage + '" alt="Barcode"></td></tr>');
-			printWindow.document.write('</table>');
-			printWindow.document.write('</body></html>');
-			printWindow.document.close();
-			printWindow.print();
 		},
 		onModel: async function () {
 			var oModel = this.getView().getModel("ModelV2");
